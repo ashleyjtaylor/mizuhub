@@ -1,4 +1,4 @@
-<h1 align="center" style="display:flex;justify-content:center;border-bottom:0;">
+<h1 align="center" style="display:flex;align-items:center;justify-content:center;border-bottom:0;">
     <img src="logo.svg" width="6%" style="margin-right:10px;" />
     <span>mizuhub</span>
 </h1>
