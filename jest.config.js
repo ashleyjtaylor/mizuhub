@@ -5,7 +5,10 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: '<rootDir>/coverage',
   coverageReporters: ['json', 'lcov'],
-  collectCoverageFrom: ['**/*.{ts,tsx}', '!apps/api/src/index.ts'],
+  collectCoverageFrom: [
+    '**/*.{ts,tsx}',
+    '!apps/api/src/index.ts'
+  ],
   coverageThreshold: {
     global: {
       branches: 90,
