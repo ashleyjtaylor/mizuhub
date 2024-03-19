@@ -8,3 +8,4 @@ logs
 dist
 cdk.out
 .cdk.staging
+coverage
