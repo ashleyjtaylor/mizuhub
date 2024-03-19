@@ -1,8 +1,10 @@
 .DS_Store
+.env
 .turbo
 .vscode
 
 node_modules
+logs
 dist
 cdk.out
 .cdk.staging
