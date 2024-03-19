@@ -1,7 +1,8 @@
 import path from 'path'
 import pino from 'pino'
 
-const logger = pino({
+export default pino({
+  enabled: !process.env.JEST_WORKER_ID,
   level: process.env.LOG_LEVEL ?? 'info',
   timestamp: pino.stdTimeFunctions.isoTime,
   transport: {
@@ -38,5 +39,3 @@ const logger = pino({
     ]
   }
 })
-
-export default logger

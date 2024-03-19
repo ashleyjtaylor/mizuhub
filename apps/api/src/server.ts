@@ -4,9 +4,11 @@ import bodyParser from 'body-parser'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 
 import logger from './logger/logger'
+import httpLogger from './logger/httpLogger'
 
 const app = express()
 
+app.use(httpLogger)
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -19,7 +21,11 @@ app.get('/health', (_req: Request, res: Response, _next: NextFunction) => {
   return res.status(StatusCodes.OK).send(ReasonPhrases.OK)
 })
 
-app.get('*', (_req: Request, res: Response, _next: NextFunction) => {
+app.get('/temp-error', (_req: Request, _res: Response, next: NextFunction) => {
+  next(new Error('Test error'))
+})
+
+app.all('*', (_req: Request, res: Response, _next: NextFunction) => {
   return res.status(StatusCodes.NOT_FOUND).send(ReasonPhrases.NOT_FOUND)
 })
 
