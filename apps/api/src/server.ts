@@ -13,7 +13,7 @@ app.get('/health', (_req: Request, res: Response, _next: NextFunction) => {
 })
 
 app.use((error: ErrorRequestHandler, _req: Request, res: Response, _next: NextFunction) => {
-  logger.error(error, 'Request handler')
+  logger.error(error, error.name)
 
   return res.status(500).json({ error: 'Something went wrong' })
 })
