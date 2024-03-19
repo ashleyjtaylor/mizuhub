@@ -15,17 +15,22 @@ const logger = pino({
         }
       },
       {
-        target: 'pino/file',
+        target: 'pino-pretty',
         level: 'info',
         options: {
-          destination: path.join(__dirname, '../logs/info.log'),
+          colorize: false,
+          singleLine: true,
+          translateTime: 'dd-mm-yyyy HH:MM:sstt',
+          destination: path.join(__dirname, '../logs/app.log'),
           mkdir: true
         }
       },
       {
-        target: 'pino/file',
+        target: 'pino-pretty',
         level: 'error',
         options: {
+          colorize: false,
+          translateTime: 'dd-mm-yyyy HH:MM:sstt',
           destination: path.join(__dirname, '../logs/error.log'),
           mkdir: true
         }
