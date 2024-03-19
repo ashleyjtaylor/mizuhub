@@ -4,6 +4,7 @@
   "description": "mizhub.com dashboard api",
   "main": "dist/index.js",
   "scripts": {
+    "start": "node --env-file=.env dist/index.js",
     "dev": "nodemon --exec node -r ts-node/register --env-file=.env src/index.ts",
     "build": "tsc -p .",
     "lint": "eslint"

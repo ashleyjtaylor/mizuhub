@@ -1,3 +1,4 @@
+import path from 'path'
 import pino from 'pino'
 
 const logger = pino({
@@ -17,7 +18,7 @@ const logger = pino({
         target: 'pino/file',
         level: 'info',
         options: {
-          destination: 'logs/info.log',
+          destination: path.join(__dirname, '../logs/info.log'),
           mkdir: true
         }
       },
@@ -25,7 +26,7 @@ const logger = pino({
         target: 'pino/file',
         level: 'error',
         options: {
-          destination: 'logs/error.log',
+          destination: path.join(__dirname, '../logs/error.log'),
           mkdir: true
         }
       }
