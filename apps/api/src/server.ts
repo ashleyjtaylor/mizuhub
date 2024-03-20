@@ -3,8 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 
-import logger from './logger/logger'
-import httpLogger from './logger/httpLogger'
+import { logger, httpLogger } from './utils/logger'
 
 const app = express()
 
