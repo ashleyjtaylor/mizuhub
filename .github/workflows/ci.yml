@@ -74,6 +74,7 @@ jobs:
       - run: npx turbo run build --filter=...[HEAD^1]
   
   sonarcloud:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
