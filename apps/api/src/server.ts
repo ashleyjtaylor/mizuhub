@@ -1,5 +1,6 @@
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import cors from 'cors'
+import helmet from 'helmet'
 import bodyParser from 'body-parser'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 
@@ -7,8 +8,9 @@ import { logger, httpLogger } from './utils/logger'
 
 const app = express()
 
-app.use(httpLogger)
+app.use(helmet())
 app.use(cors())
+app.use(httpLogger)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
