@@ -5,6 +5,7 @@
     ".gitignore",
     ".eslintrc.js",
     ".commitlintrc.json",
+    "jest.config.js",
     "tsconfig.json",
     "tsconfig.cdk.json",
     "tsconfig.next.json",

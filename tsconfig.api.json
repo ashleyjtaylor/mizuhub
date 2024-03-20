@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "display": "API",
+  "compilerOptions": {
+    "sourceMap": false,
+    "declaration": false,
+    "declarationMap": false
+  }
+}

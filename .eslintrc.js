@@ -31,9 +31,11 @@ module.exports = {
     'max-len': ['error', { 'code': 160 }],
     'eol-last': 'error',
     'comma-dangle': 'error',
+    'arrow-parens': ['error', 'as-needed'],
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
     indent: ['error', 2, { 'SwitchCase': 1 }],
+    'object-curly-spacing': ['error', 'always'],
     'no-trailing-spaces': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',
