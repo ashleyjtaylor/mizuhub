@@ -9,7 +9,7 @@ import { logger, httpLogger } from './utils/logger'
 const app = express()
 
 app.use(helmet())
-app.use(cors())
+app.use(cors({ origin: ['mizhub.com', 'localhost'] }))
 app.use(httpLogger)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
