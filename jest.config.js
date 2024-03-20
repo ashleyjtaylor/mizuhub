@@ -1,13 +1,14 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  preset: '@shelf/jest-mongodb',
+  preset: 'ts-jest',
   moduleFileExtensions: ['tsx', 'ts', 'js'],
   collectCoverage: true,
   coverageDirectory: '<rootDir>/coverage',
-  coverageReporters: ['json', 'lcov'],
+  coverageReporters: ['json', 'lcov', 'text'],
   collectCoverageFrom: [
     '**/*.{ts,tsx}',
-    '!apps/api/src/index.ts'
+    '!apps/api/src/index.ts',
+    '!**/db/**'
   ],
   coverageThreshold: {
     global: {

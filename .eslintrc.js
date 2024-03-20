@@ -35,6 +35,7 @@ module.exports = {
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
     indent: ['error', 2, { 'SwitchCase': 1 }],
+    'object-curly-spacing': ['error', 'always'],
     'no-trailing-spaces': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',

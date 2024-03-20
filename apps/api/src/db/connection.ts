@@ -1,14 +1,17 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, type Db } from 'mongodb'
 
 const client = new MongoClient(process.env.MONGO_URL ?? '')
 
-const connect = async () => {
-  const connection = await client.connect()
+let db: Db
 
-  return {
-    client: connection,
-    db: connection?.db(process.env.MONGO_DB_NAME)
-  }
+const connect = async () => {
+  if (db) return { db, client }
+
+  await client.connect()
+
+  db = client.db(process.env.MONGO_DB_NAME)
+
+  return { db, client }
 }
 
 export default connect
