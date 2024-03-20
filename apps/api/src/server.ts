@@ -9,10 +9,10 @@ import { logger, httpLogger } from './utils/logger'
 const app = express()
 
 app.use(helmet())
-app.use(cors({ origin: ['mizhub.com', 'localhost'] }))
-app.use(httpLogger)
+app.use(cors({ origin: ['mizuhub.com', 'localhost'] }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(httpLogger)
 
 app.get('/', (_req: Request, res: Response, _next: NextFunction) => {
   return res.status(StatusCodes.OK).send(ReasonPhrases.OK)
