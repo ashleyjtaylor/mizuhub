@@ -3,14 +3,8 @@ module.exports = {
   preset: 'ts-jest',
   moduleFileExtensions: ['tsx', 'ts', 'js'],
   collectCoverage: true,
-  coverageDirectory: '<rootDir>/coverage',
+  coverageDirectory: 'coverage',
   coverageReporters: ['json', 'lcov', 'text'],
-  collectCoverageFrom: [
-    '**/*.{ts,tsx}',
-    '!apps/api/src/index.ts',
-    '!**/database/**',
-    '!**/utils/logger.ts'
-  ],
   coverageThreshold: {
     global: {
       branches: 90,
@@ -22,6 +16,5 @@ module.exports = {
   testMatch: ['**/*/*.test.ts'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest'
-  },
-  setupFiles: ['<rootDir>/jest.setup.js']
+  }
 }
