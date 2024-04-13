@@ -5,7 +5,7 @@ const rootConfig = require('../../jest.config')
 module.exports = {
   ...rootConfig,
   collectCoverageFrom: [
-    '**/*.{ts,tsx}',
+    'src/**/*.{ts,tsx}',
     '!src/index.ts',
     '!src/database/**',
     '!src/utils/logger.ts'
