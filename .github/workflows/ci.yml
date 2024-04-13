@@ -1,8 +1,5 @@
 name: ci
 
-env:
-  NODE_VERSION: 20
-
 permissions:
   id-token: write
   contents: read
@@ -22,29 +19,42 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   audit:
     runs-on: ubuntu-latest
+    name: Audit node:${{ matrix.node-version }}
+    strategy:
+      matrix:
+        node-version: [18, 20]
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm audit
 
   lint:
     runs-on: ubuntu-latest
+    name: Lint node:${{ matrix.node-version }}
+    strategy:
+      matrix:
+        node-version: [18, 20]
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npx turbo run lint --filter=...[HEAD^1]
 
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
+    name: Test node:${{ matrix.node-version }}
+    strategy:
+      matrix:
+        node-version: [18, 20]
 
     services:
       mongodb:
@@ -61,7 +71,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npx turbo run test --filter=...[HEAD^1]
 
@@ -74,19 +84,26 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    name: Build node:${{ matrix.node-version }}
+    strategy:
+      matrix:
+        node-version: [18, 20]
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npx turbo run build --filter=...[HEAD^1]
   
   sonarcloud:
     needs: [test]
     runs-on: ubuntu-latest
+    name: SonarCloud
+  
     steps:
     - uses: actions/checkout@v4
       with:
