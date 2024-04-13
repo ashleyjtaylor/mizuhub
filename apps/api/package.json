@@ -8,7 +8,7 @@
     "dev": "nodemon --exec node -r ts-node/register --env-file=.env src/index.ts",
     "build": "tsc -p .",
     "lint": "eslint",
-    "test": "jest --config=../../jest.config.js --detectOpenHandles"
+    "test": "jest --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",
