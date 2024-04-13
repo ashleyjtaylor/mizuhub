@@ -9,16 +9,31 @@
 <br />
 
 <p align="center">
-  <img src="https://github.com/ashleyjtaylor/mizuhub/actions/workflows/ci.yml/badge.svg" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=ashleyjtaylor_mizuhub&metric=alert_status" />
+  <img src="https://img.shields.io/github/actions/workflow/status/ashleyjtaylor/mizuhub/ci.yml?logo=github&style=flat-square
+  " />
+  <img src="https://img.shields.io/sonar/coverage/ashleyjtaylor_mizuhub?server=https%3A%2F%2Fsonarcloud.io&logo=sonarcloud&style=flat-square
+  " />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white" />
+  <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white&style=flat-square" />
 </p>
 
 
 ## Prerequisites
+
+#### Installations
+
+- docker
+- homebrew
+
+```bash
+brew install mongodb-community
+```
+
+- Create `/opt/homebrew/var/mongodb` directory for the `mongodb` data store.
+
+#### Variables
 
 - ✅ `SONAR_TOKEN` added to GitHub secrets
 
