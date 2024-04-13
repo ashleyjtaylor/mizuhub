@@ -64,6 +64,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - run: npm ci
       - run: npx turbo run test --filter=...[HEAD^1]
+      - run: sed -i ${{ github.workspace }} coverage/lcov.info
       
       - name: SonarCloud Scan - Api
         uses: sonarsource/sonarcloud-github-action@master
