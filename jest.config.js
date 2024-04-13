@@ -13,7 +13,6 @@ module.exports = {
       statements: -10
     }
   },
-  testMatch: ['**/*/*.test.ts'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest'
   }
