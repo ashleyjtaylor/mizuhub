@@ -1,12 +1,31 @@
 import request from 'supertest'
 import { type ObjectId } from 'mongodb'
 
+import { client } from '../../../src/database/connection'
 import app from '../../../src/app'
 
 import mockContact from '../../fixtures/contacts/contact.fixture.json'
 
 describe('contactRouter', () => {
   let contactId: ObjectId
+
+  beforeAll(async() => {
+    try {
+      await client.connect()
+      await client.db().dropDatabase({ dbName: process.env.MONGO_DB_NAME })
+    } catch (err) {
+      console.error(err)
+    }
+  })
+
+  afterAll(async () => {
+    try {
+      await client.db().dropDatabase({ dbName: process.env.MONGO_DB_NAME })
+      await client.close()
+    } catch (err) {
+      console.error(err)
+    }
+  })
 
   describe('POST /contacts', () => {
     it('should return a contact', async () => {

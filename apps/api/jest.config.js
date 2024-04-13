@@ -10,6 +10,5 @@ module.exports = {
     '!src/database/**',
     '!src/utils/logger.ts'
   ],
-  setupFiles: ['<rootDir>/jest.setup.js'],
-  setupFilesAfterEnv: ['<rootDir>/jest.env.js']
+  setupFiles: ['<rootDir>/jest.setup.js']
 }
