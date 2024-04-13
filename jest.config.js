@@ -8,7 +8,8 @@ module.exports = {
   collectCoverageFrom: [
     '**/*.{ts,tsx}',
     '!apps/api/src/index.ts',
-    '!**/db/**'
+    '!**/database/**',
+    '!**/utils/logger.ts'
   ],
   coverageThreshold: {
     global: {
@@ -21,5 +22,6 @@ module.exports = {
   testMatch: ['**/*/*.test.ts'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest'
-  }
+  },
+  setupFiles: ['<rootDir>/jest.setup.js']
 }

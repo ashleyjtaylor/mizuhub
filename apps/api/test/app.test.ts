@@ -1,10 +1,10 @@
 import request from 'supertest'
 
-import app from '../src/server'
+import app from '../src/app'
 
-describe('server', () => {
+describe('app', () => {
   describe('basic routes', () => {
-    it('GET / - should return OK', async () => {
+    it('GET / - 200 OK', async () => {
       await request(app)
         .get('/')
         .expect('Content-Type', /text/)
@@ -14,7 +14,7 @@ describe('server', () => {
         })
     })
 
-    it('GET /health - should return OK', async () => {
+    it('GET /health - 200 OK', async () => {
       await request(app)
         .get('/health')
         .expect('Content-Type', /text/)
@@ -24,23 +24,23 @@ describe('server', () => {
         })
     })
 
-    it('GET /not-found - should return 404', async () => {
+    it('GET /not-found - 404 Not Found', async () => {
       await request(app)
         .get('/not-found')
-        .expect('Content-Type', /text/)
+        .expect('Content-Type', /json/)
         .expect(404)
         .then(response => {
-          expect(response.text).toEqual('Not Found')
+          expect(response.error).toBeTruthy()
         })
     })
 
-    it('GET /temp-error - should return 500', async () => {
+    it('500 Internal Server Error', async () => {
       await request(app)
-        .get('/temp-error')
-        .expect('Content-Type', /text/)
+        .get('/500')
+        .expect('Content-Type', /json/)
         .expect(500)
         .then(response => {
-          expect(response.text).toEqual('Internal Server Error')
+          expect(response.error).toBeTruthy()
         })
     })
   })

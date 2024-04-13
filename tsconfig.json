@@ -3,7 +3,7 @@
   "display": "Default",
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ESNext",
     "lib": ["es2022", "DOM", "DOM.Iterable"],
     "typeRoots": ["./node_modules/@types"],
     "module": "NodeNext",
