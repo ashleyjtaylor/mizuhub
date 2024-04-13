@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb'
 import { ZodSchema } from 'zod'
 import { BadRequestError } from '../errors/BadRequest'
 
-export const validateSearch = (req: Request, _res: Response, next: NextFunction) => {
+export const validateList = (req: Request, _res: Response, next: NextFunction) => {
   try {
     const page = Number(req.query.p || 1)
 
@@ -29,6 +29,11 @@ export const validateId = (req: Request, _res: Response, next: NextFunction) => 
 export const validate = (schema: ZodSchema) => (req: Request, _res: Response, next: NextFunction) => {
   try {
     schema.parse(req.body)
+
+    if (Object.keys(req.body).length === 0) {
+      throw new BadRequestError('Invalid data provided')
+    }
+
     next()
   } catch (error) {
     next(error)

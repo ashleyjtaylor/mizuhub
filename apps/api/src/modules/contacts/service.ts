@@ -1,5 +1,5 @@
 import contactRepository from './repository'
-import { Contact } from './schema'
+import { Contact, UpdateContact } from './schema'
 
 const createContact = async (contact: Contact) => {
   return await contactRepository.createContact(contact)
@@ -13,7 +13,7 @@ const deleteContact = async (id: string) => {
   return await contactRepository.deleteContact(id)
 }
 
-const updateContact = async (id: string, data: Contact) => {
+const updateContact = async (id: string, data: UpdateContact) => {
   return await contactRepository.updateContact(id, data)
 }
 

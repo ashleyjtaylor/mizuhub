@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 
 import { db } from '../../database/connection'
-import { Contact } from './schema'
+import { Contact, UpdateContact } from './schema'
 
 import { NotFoundError } from '../../errors/NotFound'
 
@@ -35,7 +35,7 @@ const deleteContact = async (id: string) => {
   return { ...result, _id: id }
 }
 
-const updateContact = async (id: string, data: Contact) => {
+const updateContact = async (id: string, data: UpdateContact) => {
   await getContact(id)
 
   return await db.contacts.findOneAndUpdate(
