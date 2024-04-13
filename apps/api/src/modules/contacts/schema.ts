@@ -1,6 +1,7 @@
 import z, { object, string } from 'zod'
 
 export type Contact = z.infer<typeof contactSchema>
+export type UpdateContact = z.infer<typeof updateContactSchema>
 
 const addressSchema = object({
   line1: string(),
@@ -19,4 +20,6 @@ export const contactSchema = object({
   description: string().max(255).optional(),
   address: addressSchema.optional(),
   shipping: addressSchema.optional()
-})
+}).strict()
+
+export const updateContactSchema = contactSchema.partial()
