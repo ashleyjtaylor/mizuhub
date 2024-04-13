@@ -39,7 +39,6 @@ jobs:
       - run: |
           npm ci
           npx turbo run test --filter=./apps/api
-          sed -i ${{ github.workspace }}/github/workspace apps/api/coverage/lcov.info
       
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
