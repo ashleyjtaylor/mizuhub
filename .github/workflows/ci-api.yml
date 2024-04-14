@@ -15,14 +15,10 @@ on:
     paths:
       - apps/api/**
       - .github/workflows/ci-api.yml
-    paths-ignore:
-      - "**/*.md"
   pull_request:
     paths:
       - apps/api/**
       - .github/workflows/ci-api.yml
-    paths-ignore:
-      - "**/*.md"
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
