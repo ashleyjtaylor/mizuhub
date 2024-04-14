@@ -47,7 +47,7 @@ const updateContact = async (id: string, data: UpdateContact) => {
 
 const listContacts = async (page: number) => {
   if (page === 0) {
-    return { results: [], size: 0, total: 0, hasMore: false, page }
+    return { results: [], size: 0, total: 0, totalPages: 0, hasMore: false, page }
   }
 
   const skip = (page - 1) * CONTACTS_SEARCH_PER_PAGE
@@ -61,12 +61,14 @@ const listContacts = async (page: number) => {
   const total = await db.contacts.countDocuments()
   const results = await search.toArray()
   const hasMore = total > (skip + results.length)
+  const totalPages = Math.ceil(total / CONTACTS_SEARCH_PER_PAGE)
 
   return {
     results,
     size: results.length,
     page,
     total,
+    totalPages,
     hasMore
   }
 }

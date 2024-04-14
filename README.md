@@ -24,12 +24,12 @@
 
 - docker
 - homebrew
+  - Create `/opt/homebrew/var/mongodb` directory for the `mongodb` data store.
+- Create a `SonarCloud` project for each monorepo app and apply the project attributes to the `sonar-project.properties` file
 
 ```bash
 brew install mongodb-community
 ```
-
-- Create `/opt/homebrew/var/mongodb` directory for the `mongodb` data store.
 
 #### Variables
 
