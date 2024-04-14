@@ -7,6 +7,8 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 import { errorHandler } from './middlewares/errorHandler'
 
 import contactRouter from './modules/contacts/router'
+import productRouter from './modules/products/router'
+
 import { NotFoundError } from './errors/NotFound'
 
 const app = express()
@@ -17,6 +19,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use('/contacts', contactRouter)
+app.use('/products', productRouter)
 
 app.get('/', (_req: Request, res: Response, _next: NextFunction) => {
   return res.status(StatusCodes.OK).send(ReasonPhrases.OK)
