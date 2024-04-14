@@ -11,6 +11,7 @@
     "moduleResolution": "NodeNext",
     "strict": true,
     "noEmit": false,
+    "sourceMap": true,
     "experimentalDecorators": true,
     "declaration": true,
     "declarationMap": true,
