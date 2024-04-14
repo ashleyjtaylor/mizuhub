@@ -35,11 +35,32 @@ describe('contactRouter', () => {
         .expect(200)
         .then(res => {
           contactId = res.body._id
-          expect(res.body).toEqual({ _id: res.body._id, _created: res.body._created, ...mockContact })
+
+          expect(res.body).toEqual({ ...mockContact, _id: res.body._id, _created: res.body._created })
         })
     })
 
-    it('should fail validation', async () => {
+    it('should fail with empty payload', async () => {
+      await request(app)
+        .post('/contacts')
+        .send({})
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail with incorrect keys', async () => {
+      await request(app)
+        .post('/contacts')
+        .send({ invalid: 1 })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail validation with incorrect values', async () => {
       await request(app)
         .post('/contacts')
         .send({ firstname: null, lastname: 123 })
@@ -70,7 +91,7 @@ describe('contactRouter', () => {
     })
   })
 
-  describe('SEARCH /contacts', () => {
+  describe('LIST /contacts', () => {
     it('should fetch contacts', async () => {
       await request(app)
         .get('/contacts')
@@ -119,10 +140,30 @@ describe('contactRouter', () => {
         })
     })
 
-    it('should fail validation', async () => {
+    it('should fail with empty payload', async () => {
       await request(app)
         .put(`/contacts/${contactId}`)
         .send({})
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail with incorrect values', async () => {
+      await request(app)
+        .put(`/contacts/${contactId}`)
+        .send({ firstname: 1 })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail validation with incorrect keys', async () => {
+      await request(app)
+        .put(`/contacts/${contactId}`)
+        .send({ invalid: 1 })
         .expect(400)
         .then(res => {
           expect(res.error).toBeTruthy()
