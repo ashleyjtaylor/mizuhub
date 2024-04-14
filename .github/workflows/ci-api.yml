@@ -1,7 +1,8 @@
-name: ci
+name: ci-api
 
 env:
   NODE_VERSION: 20
+  WORKING_DIRECTORY: ./apps/api
 
 permissions:
   id-token: write
@@ -11,9 +12,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - apps/api/**
+      - .github/workflows/ci-api.yml
     paths-ignore:
       - "**/*.md"
   pull_request:
+    paths:
+      - apps/api/**
+      - .github/workflows/ci-api.yml
     paths-ignore:
       - "**/*.md"
 
@@ -39,8 +46,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
-      - run: npx turbo run lint --filter=...[HEAD^1]
+      - run: |
+          npm ci
+          npx turbo run lint --filter ${{ env.WORKING_DIRECTORY }}...
 
   test:
     runs-on: ubuntu-latest
@@ -62,8 +70,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
-      - run: npx turbo run test --filter=...[HEAD^1]
+      - run: |
+          npm ci
+          npx turbo run test --filter ${{ env.WORKING_DIRECTORY }}...
+      
+      - name: Archive code coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          retention-days: 1
+          path: ${{ env.WORKING_DIRECTORY }}/coverage
 
   build:
     runs-on: ubuntu-latest
@@ -74,6 +90,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - run: npm ci
-      - run: npx turbo run build --filter=...[HEAD^1]
+      - run: |
+          npm ci
+          npx turbo run build --filter ${{ env.WORKING_DIRECTORY }}...
 
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: ${{ env.WORKING_DIRECTORY }}/coverage
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: ${{ env.WORKING_DIRECTORY }}

@@ -10,7 +10,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/actions/workflow/status/ashleyjtaylor/mizuhub/ci.yml?logo=github&style=flat-square" />
-  <img src="https://img.shields.io/sonar/coverage/ashleyjtaylor_mizuhub?server=https%3A%2F%2Fsonarcloud.io&logo=sonarcloud&style=flat-square" />
+  <img src="https://img.shields.io/sonar/coverage/ashleyjtaylor_mizuhub_api?server=https%3A%2F%2Fsonarcloud.io&logo=sonarcloud&style=flat-square&label=API" />
 </p>
 
 <p align="center">
