@@ -102,6 +102,7 @@ describe('contactRouter', () => {
           expect(res.body.total).toEqual(1)
           expect(res.body.page).toEqual(1)
           expect(res.body.hasMore).toEqual(false)
+          expect(res.body.totalPages).toEqual(1)
         })
     })
 
@@ -115,6 +116,8 @@ describe('contactRouter', () => {
           expect(res.body.total).toEqual(0)
           expect(res.body.page).toEqual(0)
           expect(res.body.hasMore).toEqual(false)
+          expect(res.body.totalPages).toEqual(0)
+
         })
     })
 

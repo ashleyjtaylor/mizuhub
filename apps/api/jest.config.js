@@ -4,12 +4,13 @@ const rootConfig = require('../../jest.config')
 
 module.exports = {
   ...rootConfig,
+  testEnvironment: 'node',
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/index.ts',
     '!src/database/**',
     '!src/utils/logger.ts'
   ],
-  testMatch: ['<rootDir>/test/**/*.test.ts'],
+  testMatch: ['**/*.test.ts'],
   setupFiles: ['<rootDir>/jest.setup.js']
 }

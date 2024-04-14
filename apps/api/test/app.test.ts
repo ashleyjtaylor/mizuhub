@@ -39,8 +39,11 @@ describe('app', () => {
         .get('/500')
         .expect('Content-Type', /json/)
         .expect(500)
-        .then(response => {
-          expect(response.error).toBeTruthy()
+        .then(res => {
+          expect(res.error).toBeTruthy()
+          expect(res.body.statusCode).toEqual(500)
+          expect(res.body.reason).toEqual('Internal Server Error')
+          expect(res.body.message).toEqual('Internal Server Error')
         })
     })
   })
