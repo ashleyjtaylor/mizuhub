@@ -91,6 +91,7 @@ jobs:
           npx turbo run build --filter ${{ env.WORKING_DIRECTORY }}...
 
   sonarcloud:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
