@@ -89,6 +89,15 @@ describe('contactRouter', () => {
           expect(res.error).toBeTruthy()
         })
     })
+
+    it('should fail to get a non-existent contact', async () => {
+      await request(app)
+        .get('/contacts//1111a1111a1a1aa1a11a1a11')
+        .expect(404)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
   })
 
   describe('LIST /contacts', () => {
