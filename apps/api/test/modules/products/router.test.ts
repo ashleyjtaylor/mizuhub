@@ -26,7 +26,7 @@ describe('productRouter', () => {
   })
 
   describe('POST /products', () => {
-    it('should create a contact', async () => {
+    it('should create a product', async () => {
       await request(app)
         .post('/products')
         .send({ name: 'Test product', price: 12.00 })
@@ -36,15 +36,54 @@ describe('productRouter', () => {
           expect(res.body).toEqual({ name: 'Test product', price: 12.00, _id: res.body._id, _created: res.body._created })
         })
     })
+
+    it('should fail with empty payload', async () => {
+      await request(app)
+        .post('/products')
+        .send({})
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail with incorrect keys', async () => {
+      await request(app)
+        .post('/products')
+        .send({ invalid: 1 })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail validation with incorrect values', async () => {
+      await request(app)
+        .post('/products')
+        .send({ name: 123 })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
   })
 
   describe('GET /products', () => {
-    it('should return a contact', async () => {
+    it('should return a product', async () => {
       await request(app)
         .get(`/products/${productId}`)
         .expect(200)
         .then(res => {
           expect(res.body.name).toEqual('Test product')
+        })
+    })
+
+    it('should return invalid id', async () => {
+      await request(app)
+        .get('/products/123')
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
         })
     })
   })
