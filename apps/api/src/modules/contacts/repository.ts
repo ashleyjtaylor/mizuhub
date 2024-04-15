@@ -5,7 +5,7 @@ import { Contact, UpdateContact } from './schema'
 
 import { NotFoundError } from '../../errors/NotFound'
 
-const CONTACTS_SEARCH_PER_PAGE = 2
+const CONTACTS_SEARCH_PER_PAGE = 10
 
 const getById = async (id: string) => {
   return await db.contacts.findOne({ _id: new ObjectId(id) })
@@ -28,11 +28,19 @@ const createContact = async (contact: Contact) => {
 }
 
 const deleteContact = async (id: string) => {
-  const contact = await getContact(id)
+  const contact = await getById(id)
 
-  const result = await db.contacts.deleteOne({ _id: contact._id })
+  if (contact) {
+    const result = await db.contacts.deleteOne({ _id: contact._id })
 
-  return { ...result, _id: id }
+    return {
+      _id: id,
+      acknowledged: result.acknowledged,
+      deletedCount: result.deletedCount
+    }
+  }
+
+  return contact
 }
 
 const updateContact = async (id: string, data: UpdateContact) => {
@@ -40,14 +48,21 @@ const updateContact = async (id: string, data: UpdateContact) => {
 
   return await db.contacts.findOneAndUpdate(
     { _id: new ObjectId(id) },
-    { $set: { ...data, _updated: new Date().toISOString() } },
+    { $set: { ...data } },
     { returnDocument: 'after' }
   )
 }
 
 const listContacts = async (page: number) => {
   if (page === 0) {
-    return { results: [], size: 0, total: 0, totalPages: 0, hasMore: false, page }
+    return {
+      page,
+      results: [],
+      size: 0,
+      total: 0,
+      totalPages: 0,
+      hasMore: false
+    }
   }
 
   const skip = (page - 1) * CONTACTS_SEARCH_PER_PAGE
@@ -62,6 +77,8 @@ const listContacts = async (page: number) => {
   const results = await search.toArray()
   const hasMore = total > (skip + results.length)
   const totalPages = Math.ceil(total / CONTACTS_SEARCH_PER_PAGE)
+  const nextPage = hasMore ? page + 1 : undefined
+  const prevPage = page !== 1 ? page - 1 : undefined
 
   return {
     results,
@@ -69,7 +86,9 @@ const listContacts = async (page: number) => {
     page,
     total,
     totalPages,
-    hasMore
+    hasMore,
+    nextPage,
+    prevPage
   }
 }
 

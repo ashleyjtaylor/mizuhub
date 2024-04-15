@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 
 import { db } from '../../database/connection'
-import { Product } from './schema'
+import { Product, UpdateProduct } from './schema'
 
 import { NotFoundError } from '../../errors/NotFound'
 
@@ -25,7 +25,35 @@ const createProduct = async (product: Product) => {
   return await db.products.findOne({ _id: result.insertedId })
 }
 
+const deleteProduct = async (id: string) => {
+  const product = await getById(id)
+
+  if (product) {
+    const result = await db.products.deleteOne({ _id: product._id })
+
+    return {
+      _id: id,
+      acknowledged: result.acknowledged,
+      deletedCount: result.deletedCount
+    }
+  }
+
+  return product
+}
+
+const updateProduct = async (id: string, data: UpdateProduct) => {
+  await getProduct(id)
+
+  return await db.products.findOneAndUpdate(
+    { _id: new ObjectId(id) },
+    { $set: { ...data } },
+    { returnDocument: 'after' }
+  )
+}
+
 export default {
   getProduct,
-  createProduct
+  createProduct,
+  deleteProduct,
+  updateProduct
 }

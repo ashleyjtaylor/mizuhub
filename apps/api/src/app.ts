@@ -4,7 +4,7 @@ import helmet from 'helmet'
 import bodyParser from 'body-parser'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 
-import { errorHandler } from './middlewares/errorHandler'
+import { errorHandler } from './middlewares/error-handler'
 
 import contactRouter from './modules/contacts/router'
 import productRouter from './modules/products/router'

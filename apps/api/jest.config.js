@@ -12,5 +12,8 @@ module.exports = {
     '!src/utils/logger.ts'
   ],
   testMatch: ['**/*.test.ts'],
-  setupFiles: ['<rootDir>/jest.setup.js']
+  setupFiles: ['<rootDir>/jest.setup.js'],
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: './tsconfig.json' }]
+  }
 }
