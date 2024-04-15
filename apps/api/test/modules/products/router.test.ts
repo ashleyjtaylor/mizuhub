@@ -71,7 +71,6 @@ describe('productRouter', () => {
         })
         .expect(200)
         .then(res => {
-          console.log(res.error)
           productId = res.body._id
 
           expect(res.body).toEqual({
