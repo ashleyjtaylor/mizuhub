@@ -20,7 +20,18 @@ router.get('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
 }))
 
 router.post('/', validate(productSchema), asyncFn(async (req: Request, res: Response) => {
-  const product = await productService.createProduct(req.body)
+  const data = {
+    _created: new Date().toISOString(),
+    name: req.body.name,
+    price: req.body.price,
+    description: req.body.description ?? null,
+    active: req.body.active ?? false,
+    shippable: req.body.shippable ?? false,
+    metadata: req.body.metadata ?? null,
+    dimensions: req.body.dimensions ?? null
+  }
+
+  const product = await productService.createProduct(data)
 
   productLogger.info({ product }, 'Product created')
 

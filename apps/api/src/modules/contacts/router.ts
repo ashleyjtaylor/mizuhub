@@ -30,7 +30,18 @@ router.get('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
 }))
 
 router.post('/', validate(contactSchema), asyncFn(async (req: Request, res: Response) => {
-  const contact = await contactService.createContact(req.body)
+  const data = {
+    _created:  new Date().toISOString(),
+    firstname: req.body.firstname,
+    lastname: req.body.lastname ?? null,
+    email: req.body.email ?? null,
+    phone: req.body.phone ?? null,
+    description: req.body.description ?? null,
+    address: req.body.address ?? null,
+    shipping: req.body.shipping ?? null
+  }
+
+  const contact = await contactService.createContact(data)
 
   contactLogger.info({ contact }, 'Contact created')
 
