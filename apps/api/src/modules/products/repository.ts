@@ -20,7 +20,8 @@ const getProduct = async (id: string) => {
 }
 
 const createProduct = async (data: Product) => {
-  const product: Product = {
+  const product = {
+    _created: new Date().toISOString(),
     name: data.name,
     price: data.price,
     description: data.description ?? null,
@@ -30,7 +31,7 @@ const createProduct = async (data: Product) => {
     dimensions: data.dimensions ?? null
   }
 
-  const result = await db.products.insertOne({ ...product, _created: new Date().toISOString() })
+  const result = await db.products.insertOne(product)
 
   return await db.products.findOne({ _id: result.insertedId })
 }
