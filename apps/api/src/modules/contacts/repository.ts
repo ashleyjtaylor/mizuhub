@@ -21,7 +21,17 @@ const getContact = async (id: string) => {
   return contact
 }
 
-const createContact = async (contact: Contact) => {
+const createContact = async (data: Contact) => {
+  const contact: Contact = {
+    firstname: data.firstname,
+    lastname: data.lastname ?? null,
+    email: data.email ?? null,
+    phone: data.phone ?? null,
+    description: data.description ?? null,
+    address: data.address ?? null,
+    shipping: data.shipping ?? null
+  }
+
   const result = await db.contacts.insertOne({ ...contact, _created: new Date().toISOString() })
 
   return await db.contacts.findOne({ _id: result.insertedId })

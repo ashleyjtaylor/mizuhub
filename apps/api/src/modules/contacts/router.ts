@@ -45,7 +45,7 @@ router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) =>
   res.json(result)
 }))
 
-router.put('/:id', validateId, validate(updateContactSchema), asyncFn(async (req: Request, res: Response) => {
+router.patch('/:id', validateId, validate(updateContactSchema), asyncFn(async (req: Request, res: Response) => {
   const result = await contactService.updateContact(req.params.id as string, req.body)
 
   contactLogger.info({ result }, `Contact upadted: ${req.params.id}`)

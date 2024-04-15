@@ -4,8 +4,6 @@ import { type ObjectId } from 'mongodb'
 import { client } from '../../../src/database/connection'
 import app from '../../../src/app'
 
-import mockContact from '../../fixtures/contacts/contact.fixture.json'
-
 describe('contactRouter', () => {
   let contactId: ObjectId
 
@@ -28,15 +26,83 @@ describe('contactRouter', () => {
   })
 
   describe('POST /contacts', () => {
-    it('should return a contact', async () => {
+    it('should create a contact using required values', async () => {
       await request(app)
         .post('/contacts')
-        .send(mockContact)
+        .send({ firstname: 'luke' })
         .expect(200)
         .then(res => {
           contactId = res.body._id
 
-          expect(res.body).toEqual({ ...mockContact, _id: res.body._id, _created: res.body._created })
+          expect(res.body).toEqual({
+            _id: res.body._id,
+            _created: res.body._created,
+            firstname: 'luke',
+            lastname: null,
+            email: null,
+            phone: null,
+            description: null,
+            address: null,
+            shipping: null
+          })
+        })
+    })
+
+    it('should create a contact using all values', async () => {
+      await request(app)
+        .post('/contacts')
+        .send({
+          firstname: 'luke',
+          lastname: 'skywalker',
+          email: 'luke@sw.com',
+          phone: '07712345678',
+          description: 'Jedi master from tatooine',
+          address: {
+            line1: 'line1',
+            line2: 'line2',
+            city: 'city',
+            state: 'state',
+            country: 'country',
+            postcode: 'SW0 4IV'
+          },
+          shipping: {
+            line1: 'line1',
+            line2: 'line2',
+            city: 'city',
+            state: 'state',
+            country: 'country',
+            postcode: 'SW0 4IV'
+          }
+        })
+        .expect(200)
+        .then(res => {
+          contactId = res.body._id
+
+          expect(res.body).toEqual({
+            _id: res.body._id,
+            _created: res.body._created,
+            firstname: 'luke',
+            lastname: 'skywalker',
+            email: 'luke@sw.com',
+            phone: '07712345678',
+            description: 'Jedi master from tatooine',
+            address: {
+              line1: 'line1',
+              line2: 'line2',
+              city: 'city',
+              state: 'state',
+              country: 'country',
+              postcode: 'SW0 4IV'
+            },
+            shipping: {
+              line1: 'line1',
+              line2: 'line2',
+              city: 'city',
+              state: 'state',
+              country: 'country',
+              postcode: 'SW0 4IV'
+            }
+          })
         })
     })
 
@@ -77,7 +143,7 @@ describe('contactRouter', () => {
         .get(`/contacts/${contactId}`)
         .expect(200)
         .then(res => {
-          expect(res.body.firstname).toEqual('Luke')
+          expect(res.body.firstname).toEqual('luke')
         })
     })
 
@@ -106,9 +172,9 @@ describe('contactRouter', () => {
         .get('/contacts')
         .expect(200)
         .then(res => {
-          expect(res.body.results).toHaveLength(1)
-          expect(res.body.size).toEqual(1)
-          expect(res.body.total).toEqual(1)
+          expect(res.body.results).toHaveLength(2)
+          expect(res.body.size).toEqual(2)
+          expect(res.body.total).toEqual(2)
           expect(res.body.page).toEqual(1)
           expect(res.body.hasMore).toEqual(false)
           expect(res.body.totalPages).toEqual(1)
@@ -140,21 +206,21 @@ describe('contactRouter', () => {
     })
   })
 
-  describe('PUT /contacts/:id', () => {
-    it('should updated a contact', async () => {
+  describe('PATCH /contacts/:id', () => {
+    it('should update a contact', async () => {
       await request(app)
-        .put(`/contacts/${contactId}`)
-        .send({ firstname: 'Anakin' })
+        .patch(`/contacts/${contactId}`)
+        .send({ firstname: 'anakin' })
         .expect(200)
         .then(res => {
-          expect(res.body.firstname).toEqual('Anakin')
+          expect(res.body.firstname).toEqual('anakin')
           expect(res.body._updated).toBeTruthy()
         })
     })
 
     it('should fail with empty payload', async () => {
       await request(app)
-        .put(`/contacts/${contactId}`)
+        .patch(`/contacts/${contactId}`)
         .send({})
         .expect(400)
         .then(res => {
@@ -164,7 +230,7 @@ describe('contactRouter', () => {
 
     it('should fail with incorrect values', async () => {
       await request(app)
-        .put(`/contacts/${contactId}`)
+        .patch(`/contacts/${contactId}`)
         .send({ firstname: 1 })
         .expect(400)
         .then(res => {
@@ -174,7 +240,7 @@ describe('contactRouter', () => {
 
     it('should fail validation with incorrect keys', async () => {
       await request(app)
-        .put(`/contacts/${contactId}`)
+        .patch(`/contacts/${contactId}`)
         .send({ invalid: 1 })
         .expect(400)
         .then(res => {
@@ -184,8 +250,8 @@ describe('contactRouter', () => {
 
     it('should fail to update a non-existent contact', async () => {
       await request(app)
-        .put('/contacts/1111a1111a1a1aa1a11a1a11')
-        .send({ firstname: 'Anakin' })
+        .patch('/contacts/1111a1111a1a1aa1a11a1a11')
+        .send({ firstname: 'anakin' })
         .expect(404)
         .then(res => {
           expect(res.error).toBeTruthy()

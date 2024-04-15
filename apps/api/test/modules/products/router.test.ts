@@ -26,14 +26,74 @@ describe('productRouter', () => {
   })
 
   describe('POST /products', () => {
-    it('should create a product', async () => {
+    it('should create a product using required values', async () => {
       await request(app)
         .post('/products')
-        .send({ name: 'Test product', price: 12.00 })
+        .send({ name: 'product', price: 3000 })
         .expect(200)
         .then(res => {
           productId = res.body._id
-          expect(res.body).toEqual({ name: 'Test product', price: 12.00, _id: res.body._id, _created: res.body._created })
+
+          expect(res.body).toEqual({
+            _id: res.body._id,
+            _created: res.body._created,
+            name: 'product',
+            price: 3000,
+            active: false,
+            shippable: false,
+            description: null,
+            dimensions: null,
+            metadata: null
+          })
+        })
+    })
+
+    it('should create a product using all values', async () => {
+      await request(app)
+        .post('/products')
+        .send({
+          name: 'product',
+          price: 40020,
+          active: true,
+          shippable: true,
+          description: 'a new product',
+          dimensions: {
+            width: 14.00,
+            height: 8.25,
+            length: 324.97,
+            weight: 590.89
+          },
+          metadata: {
+            creator: 'obi',
+            availability: 10,
+            external: true
+          }
+        })
+        .expect(200)
+        .then(res => {
+          console.log(res.error)
+          productId = res.body._id
+
+          expect(res.body).toEqual({
+            _id: res.body._id,
+            _created: res.body._created,
+            name: 'product',
+            price: 40020,
+            active: true,
+            shippable: true,
+            description: 'a new product',
+            dimensions: {
+              width: 14.00,
+              height: 8.25,
+              length: 324.97,
+              weight: 590.89
+            },
+            metadata: {
+              creator: 'obi',
+              availability: 10,
+              external: true
+            }
+          })
         })
     })
 
@@ -66,6 +126,38 @@ describe('productRouter', () => {
           expect(res.error).toBeTruthy()
         })
     })
+
+    it('should fail validation for "metadata" - key length', async () => {
+      await request(app)
+        .post('/products')
+        .send({
+          name: 'product',
+          price: 300,
+          metadata: {
+            ['k'.repeat(33)]: 'value'
+          }
+        })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail validation for "metadata" - value length', async () => {
+      await request(app)
+        .post('/products')
+        .send({
+          name: 'product',
+          price: 300,
+          metadata: {
+            k: 'v'.repeat(301)
+          }
+        })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
   })
 
   describe('GET /products', () => {
@@ -74,7 +166,7 @@ describe('productRouter', () => {
         .get(`/products/${productId}`)
         .expect(200)
         .then(res => {
-          expect(res.body.name).toEqual('Test product')
+          expect(res.body.name).toEqual('product')
         })
     })
 
