@@ -14,12 +14,12 @@ const addressSchema = object({
 
 export const contactSchema = object({
   firstname: string().min(1).max(32),
-  lastname: string().min(1).max(32).optional(),
-  email: string().email().optional(),
-  phone: string().optional(),
-  description: string().max(255).optional(),
-  address: addressSchema.optional(),
-  shipping: addressSchema.optional()
+  lastname: string().min(1).max(32).nullable().optional(),
+  email: string().email().nullable().optional(),
+  phone: string().nullable().optional(),
+  description: string().max(255).nullable().optional(),
+  address: addressSchema.nullable().optional(),
+  shipping: addressSchema.nullable().optional()
 }).strict()
 
 export const updateContactSchema = contactSchema.partial()
