@@ -5,9 +5,11 @@ export type Contact = z.infer<typeof contactSchema>
 export type CreateContact = z.infer<typeof createContactSchema>
 export type UpdateContact = z.infer<typeof updateContactSchema>
 
+export const contactIdPrefix = 'con'
+
 const addressSchema = object({
   line1: string(),
-  line2: string(),
+  line2: string().nullable().optional(),
   city: string(),
   state: string(),
   country: string(),

@@ -1,12 +1,11 @@
-import { ObjectId } from 'mongodb'
-
 import { db } from '../../database/connection'
-import { CreateProduct, Product, UpdateProduct } from './schema'
+import { CreateProduct, Product, UpdateProduct, productIdPrefix } from './schema'
 
 import { NotFoundError } from '../../errors/NotFound'
+import { createId } from '../../utils/create-id'
 
 const getById = async (id: string) => {
-  return await db.products.findOne<Product>({ _id: new ObjectId(id) })
+  return await db.products.findOne<Product>({ _id: id })
 }
 
 const getProduct = async (id: string) => {
@@ -22,8 +21,9 @@ const getProduct = async (id: string) => {
 const createProduct = async (product: CreateProduct) => {
   const result = await db.products.insertOne({
     ...product,
-    _created: new Date().toISOString(),
-    _updated: new Date().toISOString()
+    _id: createId(productIdPrefix),
+    _created: Date.now(),
+    _updated: Date.now()
   })
 
   return await db.products.findOne<Product>({ _id: result.insertedId })
@@ -49,8 +49,8 @@ const updateProduct = async (id: string, data: UpdateProduct) => {
   await getProduct(id)
 
   return await db.products.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: { ...data, _updated: new Date().toISOString() } },
+    { _id: id },
+    { $set: { ...data, _updated: Date.now() } },
     { returnDocument: 'after' }
   ) as Product
 }

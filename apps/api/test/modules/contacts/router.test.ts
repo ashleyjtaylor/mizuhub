@@ -1,5 +1,4 @@
 import request from 'supertest'
-import { type ObjectId } from 'mongodb'
 
 import { client, db } from '../../../src/database/connection'
 import app from '../../../src/app'
@@ -7,7 +6,7 @@ import app from '../../../src/app'
 import fixturesContacts from '../../fixtures/contacts.json'
 
 describe('contactRouter', () => {
-  let contactId: ObjectId
+  let contactId: string
 
   beforeAll(async() => {
     try {
@@ -162,7 +161,7 @@ describe('contactRouter', () => {
 
     it('should fail to get a non-existent contact', async () => {
       await request(app)
-        .get('/contacts//1111a1111a1a1aa1a11a1a11')
+        .get('/contacts/con_000000000000000000000000')
         .expect(404)
         .then(res => {
           expect(res.error).toBeTruthy()
@@ -272,7 +271,7 @@ describe('contactRouter', () => {
 
     it('should fail to update a non-existent contact', async () => {
       await request(app)
-        .patch('/contacts/1111a1111a1a1aa1a11a1a11')
+        .patch('/contacts/con_000000000000000000000000')
         .send({ firstname: 'anakin' })
         .expect(404)
         .then(res => {

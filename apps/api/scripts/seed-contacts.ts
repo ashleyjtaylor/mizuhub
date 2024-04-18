@@ -2,37 +2,41 @@ import fs from 'fs'
 import path from 'path'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 
-import { Contact } from '../src/modules/contacts/schema'
+import { Contact, contactIdPrefix } from '../src/modules/contacts/schema'
+import { createId } from '../src/utils/create-id'
 
-const data: Omit<Contact, '_id'>[] = []
+import { exists } from './seed-utils'
+
+const data: Contact[] = []
 
 const count = Number(process.argv[2]) || 20
 
 for (let i = 0; i < count; ++i) {
-  const contact: Omit<Contact, '_id'> = {
+  const contact: Contact= {
+    _id: createId(contactIdPrefix),
     _created: Date.now(),
     _updated: Date.now(),
     firstname: faker.person.firstName(),
     lastname: faker.person.lastName(),
-    email: faker.internet.email(),
-    phone: faker.phone.number(),
-    description: faker.person.bio(),
-    address: {
-      line1: faker.location.buildingNumber(),
-      line2: faker.location.streetAddress({ useFullAddress: true }),
+    email: exists() ? faker.internet.email() : null,
+    phone: exists() ? faker.phone.number() : null,
+    description: exists() ? faker.person.bio() : null,
+    address: exists() ? {
+      line1: faker.location.streetAddress({ useFullAddress: true }),
+      line2: exists() ? faker.location.secondaryAddress() : null,
       city: faker.location.city(),
       state: faker.location.state(),
       country: faker.location.country(),
       postcode: faker.location.zipCode()
-    },
-    shipping: {
-      line1: faker.location.buildingNumber(),
-      line2: faker.location.streetAddress({ useFullAddress: true }),
+    } : null,
+    shipping: exists() ? {
+      line1: faker.location.streetAddress({ useFullAddress: true }),
+      line2: exists() ? faker.location.secondaryAddress() : null,
       city: faker.location.city(),
       state: faker.location.state(),
       country: faker.location.country(),
       postcode: faker.location.zipCode()
-    }
+    } : null
   }
 
   data.push(contact)

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
-import { BSONError } from 'bson'
 import { ZodError } from 'zod'
 
 import { logger } from '../utils/logger'
@@ -16,14 +15,6 @@ export const errorHandler = (error: BaseError, _req: Request, res: Response, _ne
       reason: ReasonPhrases.BAD_REQUEST,
       message: 'Invalid data provided',
       details: error.issues
-    })
-  }
-
-  if (error instanceof BSONError) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      statusCode: StatusCodes.BAD_REQUEST,
-      reason: ReasonPhrases.BAD_REQUEST,
-      message: 'Invalid id'
     })
   }
 

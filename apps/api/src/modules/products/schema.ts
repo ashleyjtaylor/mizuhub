@@ -6,6 +6,8 @@ export type Product = z.infer<typeof productSchema>
 export type CreateProduct = z.infer<typeof createProductSchema>
 export type UpdateProduct = z.infer<typeof updateProductSchema>
 
+export const productIdPrefix = 'pro'
+
 const metadataKeySchema = string().max(32, {
   message: 'Metadata key must not exceed 32 characters'
 })
