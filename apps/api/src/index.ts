@@ -1,6 +1,7 @@
 import app from './app'
-import { client } from './database/connection'
-import { logger } from './utils/logger'
+
+import { client } from '@/database/connection'
+import { logger } from '@/utils/logger'
 
 const port = process.env.PORT ?? 3000
 

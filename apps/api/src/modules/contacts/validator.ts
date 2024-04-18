@@ -1,4 +1,4 @@
-import { validate } from '../../middlewares/validation'
+import { validate } from '@/middlewares/validation'
 
 import { createContactSchema, updateContactSchema } from './schema'
 

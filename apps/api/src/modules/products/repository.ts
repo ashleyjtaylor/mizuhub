@@ -1,8 +1,8 @@
-import { db } from '../../database/connection'
-import { CreateProduct, Product, UpdateProduct, productIdPrefix, productObjectName } from './schema'
+import { db } from '@/database/connection'
+import { createId } from '@/utils/create-id'
+import { NotFoundError } from '@/errors/NotFound'
 
-import { NotFoundError } from '../../errors/NotFound'
-import { createId } from '../../utils/create-id'
+import { CreateProduct, Product, UpdateProduct, productIdPrefix, productObjectName } from './schema'
 
 const getById = async (id: string) => {
   return await db.products.findOne<Product>({ _id: id })

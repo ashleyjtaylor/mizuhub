@@ -1,5 +1,6 @@
 import z, { object, string } from 'zod'
-import { databaseSchema } from '../../database/schema'
+
+import { databaseSchema } from '@/database/schema'
 
 export type Contact = z.infer<typeof contactSchema>
 export type CreateContact = z.infer<typeof createContactSchema>

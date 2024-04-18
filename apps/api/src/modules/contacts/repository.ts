@@ -1,9 +1,8 @@
+import { db } from '@/database/connection'
+import { createId } from '@/utils/create-id'
+import { NotFoundError } from '@/errors/NotFound'
+
 import { Contact, CreateContact, UpdateContact, contactIdPrefix, contactObjectName } from './schema'
-
-import { db } from '../../database/connection'
-import { createId } from '../../utils/create-id'
-
-import { NotFoundError } from '../../errors/NotFound'
 
 const CONTACTS_SEARCH_PER_PAGE = 10
 

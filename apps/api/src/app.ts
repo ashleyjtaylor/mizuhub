@@ -4,14 +4,13 @@ import helmet from 'helmet'
 import bodyParser from 'body-parser'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 
-import { errorHandler } from './middlewares/error-handler'
+import { errorHandler } from '@/middlewares/error-handler'
+import { NotFoundError } from '@/errors/NotFound'
+import { createId } from '@/utils/create-id'
+import { httpLogger } from '@/utils/logger'
 
-import contactRouter from './modules/contacts/router'
-import productRouter from './modules/products/router'
-
-import { NotFoundError } from './errors/NotFound'
-import { createId } from './utils/create-id'
-import { httpLogger } from './utils/logger'
+import contactRouter from '@/modules/contacts/router'
+import productRouter from '@/modules/products/router'
 
 const app = express()
 

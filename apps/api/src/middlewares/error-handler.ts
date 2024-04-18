@@ -2,9 +2,8 @@ import { Request, Response, NextFunction } from 'express'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 import { ZodError } from 'zod'
 
-import { logger } from '../utils/logger'
-
-import { BaseError } from '../errors/Base'
+import { logger } from '@/utils/logger'
+import { BaseError } from '@/errors/Base'
 
 export const errorHandler = (error: BaseError, _req: Request, res: Response, _next: NextFunction) => {
   logger.error(error)

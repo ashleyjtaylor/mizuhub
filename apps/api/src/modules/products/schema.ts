@@ -1,6 +1,6 @@
 import z, { boolean, number, object, string, union, record, array } from 'zod'
 
-import { databaseSchema } from '../../database/schema'
+import { databaseSchema } from '@/database/schema'
 
 export type Product = z.infer<typeof productSchema>
 export type CreateProduct = z.infer<typeof createProductSchema>
