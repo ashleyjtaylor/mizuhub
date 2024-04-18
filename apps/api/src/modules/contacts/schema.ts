@@ -6,6 +6,7 @@ export type CreateContact = z.infer<typeof createContactSchema>
 export type UpdateContact = z.infer<typeof updateContactSchema>
 
 export const contactIdPrefix = 'con'
+export const contactObjectName = 'contact'
 
 const addressSchema = object({
   line1: string(),

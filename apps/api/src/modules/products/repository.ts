@@ -1,5 +1,5 @@
 import { db } from '../../database/connection'
-import { CreateProduct, Product, UpdateProduct, productIdPrefix } from './schema'
+import { CreateProduct, Product, UpdateProduct, productIdPrefix, productObjectName } from './schema'
 
 import { NotFoundError } from '../../errors/NotFound'
 import { createId } from '../../utils/create-id'
@@ -23,7 +23,8 @@ const createProduct = async (product: CreateProduct) => {
     ...product,
     _id: createId(productIdPrefix),
     _created: Date.now(),
-    _updated: Date.now()
+    _updated: Date.now(),
+    object: productObjectName
   })
 
   return await db.products.findOne<Product>({ _id: result.insertedId })

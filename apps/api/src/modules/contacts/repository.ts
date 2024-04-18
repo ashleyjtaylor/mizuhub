@@ -1,4 +1,4 @@
-import { Contact, CreateContact, UpdateContact, contactIdPrefix } from './schema'
+import { Contact, CreateContact, UpdateContact, contactIdPrefix, contactObjectName } from './schema'
 
 import { db } from '../../database/connection'
 import { createId } from '../../utils/create-id'
@@ -26,7 +26,8 @@ const createContact = async (contact: CreateContact) => {
     ...contact,
     _id: createId(contactIdPrefix),
     _created: Date.now(),
-    _updated: Date.now()
+    _updated: Date.now(),
+    object: contactObjectName
   })
 
   return await db.contacts.findOne<Contact>({ _id: result.insertedId })

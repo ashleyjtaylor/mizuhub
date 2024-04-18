@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 
-import { Contact, contactIdPrefix } from '../src/modules/contacts/schema'
+import { Contact, contactIdPrefix, contactObjectName } from '../src/modules/contacts/schema'
 import { createId } from '../src/utils/create-id'
 
 import { exists } from './seed-utils'
@@ -16,6 +16,7 @@ for (let i = 0; i < count; ++i) {
     _id: createId(contactIdPrefix),
     _created: Date.now(),
     _updated: Date.now(),
+    object: contactObjectName,
     firstname: faker.person.firstName(),
     lastname: faker.person.lastName(),
     email: exists() ? faker.internet.email() : null,
