@@ -1,10 +1,11 @@
 import { Router, Request, Response } from 'express'
 
 import productService from './service'
-import { productSchema } from './schema'
+import { CreateProduct, UpdateProduct } from './schema'
+import { validateCreateProduct, validateUpdateProduct } from './validator'
 
-import { validate, validateId } from '../../middlewares/validation'
-import { asyncFn } from '../../middlewares/asyncHandler'
+import { validateId, validateBody } from '../../middlewares/validation'
+import { asyncFn } from '../../middlewares/async-handler'
 
 import { logger } from '../../utils/logger'
 
@@ -19,23 +20,44 @@ router.get('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
   res.json(product)
 }))
 
-router.post('/', validate(productSchema), asyncFn(async (req: Request, res: Response) => {
-  const data = {
-    _created: new Date().toISOString(),
+router.post('/', validateCreateProduct, asyncFn(async (req: Request, res: Response) => {
+  const data: CreateProduct = {
     name: req.body.name,
     price: req.body.price,
     description: req.body.description ?? null,
-    active: req.body.active ?? false,
-    shippable: req.body.shippable ?? false,
+    images: req.body.images ?? [],
+    features: req.body.features ?? [],
+    active: req.body.active ?? null,
+    shippable: req.body.shippable ?? null,
     metadata: req.body.metadata ?? null,
-    dimensions: req.body.dimensions ?? null
+    dimensions: req.body.dimensions ?? null,
+    unit_label: req.body.unit_label ?? null
   }
 
   const product = await productService.createProduct(data)
 
   productLogger.info({ product }, 'Product created')
 
-  res.json(product)
+  res.status(201).json(product)
+}))
+
+router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
+  const result = await productService.deleteProduct(req.params.id as string)
+
+  productLogger.info({ result }, `Product deleted: ${req.params.id}`)
+
+  const statusCode = result ? 200 : 204
+  res.status(statusCode).json(result)
+}))
+
+router.patch('/:id', validateId, validateBody, validateUpdateProduct, asyncFn(async (req: Request, res: Response) => {
+  const data: UpdateProduct = req.body
+
+  const result = await productService.updateProduct(req.params.id as string, data)
+
+  productLogger.info({ result }, `Product upadted: ${req.params.id}`)
+
+  res.json(result)
 }))
 
 export default router

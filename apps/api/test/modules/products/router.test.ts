@@ -10,7 +10,6 @@ describe('productRouter', () => {
   beforeAll(async() => {
     try {
       await client.connect()
-      await client.db().dropDatabase({ dbName: process.env.MONGO_DB_NAME })
     } catch (err) {
       console.error(err)
     }
@@ -30,17 +29,21 @@ describe('productRouter', () => {
       await request(app)
         .post('/products')
         .send({ name: 'product', price: 3000 })
-        .expect(200)
+        .expect(201)
         .then(res => {
           productId = res.body._id
 
           expect(res.body).toEqual({
             _id: res.body._id,
             _created: res.body._created,
+            _updated: res.body._updated,
             name: 'product',
             price: 3000,
-            active: false,
-            shippable: false,
+            images: [],
+            features: [],
+            unit_label: null,
+            active: null,
+            shippable: null,
             description: null,
             dimensions: null,
             metadata: null
@@ -57,6 +60,9 @@ describe('productRouter', () => {
           active: true,
           shippable: true,
           description: 'a new product',
+          images: ['https://jest-image'],
+          features: ['10 day free trial', '30mb of storage'],
+          unit_label: 'hours',
           dimensions: {
             width: 14.00,
             height: 8.25,
@@ -69,18 +75,22 @@ describe('productRouter', () => {
             external: true
           }
         })
-        .expect(200)
+        .expect(201)
         .then(res => {
           productId = res.body._id
 
           expect(res.body).toEqual({
             _id: res.body._id,
             _created: res.body._created,
+            _updated: res.body._updated,
             name: 'product',
             price: 40020,
             active: true,
             shippable: true,
             description: 'a new product',
+            images: ['https://jest-image'],
+            features: ['10 day free trial', '30mb of storage'],
+            unit_label: 'hours',
             dimensions: {
               width: 14.00,
               height: 8.25,
@@ -178,12 +188,84 @@ describe('productRouter', () => {
         })
     })
 
-    it('should fail to get a non-existent product', async () => {
+    it('should return no content when deleting a non-existent product', async () => {
       await request(app)
-        .get('/products//1111a1111a1a1aa1a11a1a11')
+        .get('/products/1111a1111a1a1aa1a11a1a11')
         .expect(404)
         .then(res => {
           expect(res.error).toBeTruthy()
+        })
+    })
+  })
+
+  describe('PATCH /products/:id', () => {
+    it('should update a product', async () => {
+      await request(app)
+        .patch(`/products/${productId}`)
+        .send({ price: 700 })
+        .expect(200)
+        .then(res => {
+          expect(res.body.price).toEqual(700)
+        })
+    })
+
+    it('should fail with empty payload', async () => {
+      await request(app)
+        .patch(`/products/${productId}`)
+        .send({})
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail with incorrect values', async () => {
+      await request(app)
+        .patch(`/products/${productId}`)
+        .send({ name: 1 })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail validation with incorrect keys', async () => {
+      await request(app)
+        .patch(`/products/${productId}`)
+        .send({ invalid: 1 })
+        .expect(400)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+
+    it('should fail to update a non-existent contact', async () => {
+      await request(app)
+        .patch('/products/1111a1111a1a1aa1a11a1a11')
+        .send({ price: 200 })
+        .expect(404)
+        .then(res => {
+          expect(res.error).toBeTruthy()
+        })
+    })
+  })
+
+  describe('DELETE /products/:id', () => {
+    it('should delete a contact', async () => {
+      await request(app)
+        .delete(`/products/${productId}`)
+        .expect(200)
+        .then(res => {
+          expect(res.body).toEqual({ _id: productId, acknowledged: true, deletedCount: 1 })
+        })
+    })
+
+    it('should return no content when deleting a non-existent contact', async () => {
+      await request(app)
+        .delete(`/products/${productId}`)
+        .expect(204)
+        .then(res => {
+          expect(res.body).toEqual({})
         })
     })
   })

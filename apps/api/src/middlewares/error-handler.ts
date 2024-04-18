@@ -15,7 +15,7 @@ export const errorHandler = (error: BaseError, _req: Request, res: Response, _ne
       statusCode: StatusCodes.BAD_REQUEST,
       reason: ReasonPhrases.BAD_REQUEST,
       message: 'Invalid data provided',
-      errors: error.issues
+      details: error.issues
     })
   }
 

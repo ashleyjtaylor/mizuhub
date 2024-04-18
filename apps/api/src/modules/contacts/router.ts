@@ -1,17 +1,18 @@
 import { Router, Request, Response } from 'express'
 
 import contactService from './service'
-import { contactSchema, updateContactSchema } from './schema'
+import { validateCreateContact, validateUpdateContact } from './validator'
 
-import { validate, validateId, validateList } from '../../middlewares/validation'
-import { asyncFn } from '../../middlewares/asyncHandler'
+import { validateId, validateBody, validateListQueryParams } from '../../middlewares/validation'
+import { asyncFn } from '../../middlewares/async-handler'
 
 import { logger } from '../../utils/logger'
+import { CreateContact, UpdateContact } from './schema'
 
 const router = Router()
 const contactLogger = logger.child({ service: 'contact' })
 
-router.get('/', validateList, asyncFn(async (req: Request, res: Response) => {
+router.get('/', validateListQueryParams, asyncFn(async (req: Request, res: Response) => {
   const page = Number(req.query.p || 1)
 
   const results = await contactService.listContacts(page)
@@ -29,9 +30,8 @@ router.get('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
   res.json(contact)
 }))
 
-router.post('/', validate(contactSchema), asyncFn(async (req: Request, res: Response) => {
-  const data = {
-    _created:  new Date().toISOString(),
+router.post('/', validateCreateContact, asyncFn(async (req: Request, res: Response) => {
+  const data: CreateContact = {
     firstname: req.body.firstname,
     lastname: req.body.lastname ?? null,
     email: req.body.email ?? null,
@@ -45,7 +45,7 @@ router.post('/', validate(contactSchema), asyncFn(async (req: Request, res: Resp
 
   contactLogger.info({ contact }, 'Contact created')
 
-  res.json(contact)
+  res.status(201).json(contact)
 }))
 
 router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
@@ -53,11 +53,14 @@ router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) =>
 
   contactLogger.info({ result }, `Contact deleted: ${req.params.id}`)
 
-  res.json(result)
+  const statusCode = result ? 200 : 204
+  res.status(statusCode).json(result)
 }))
 
-router.patch('/:id', validateId, validate(updateContactSchema), asyncFn(async (req: Request, res: Response) => {
-  const result = await contactService.updateContact(req.params.id as string, req.body)
+router.patch('/:id', validateId, validateBody, validateUpdateContact, asyncFn(async (req: Request, res: Response) => {
+  const data: UpdateContact = req.body
+
+  const result = await contactService.updateContact(req.params.id as string, data)
 
   contactLogger.info({ result }, `Contact upadted: ${req.params.id}`)
 

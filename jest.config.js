@@ -12,8 +12,5 @@ module.exports = {
       lines: 90,
       statements: 90
     }
-  },
-  transform: {
-    '^.+\\.tsx?$': ['ts-jest', { tsconfig: '../../tsconfig.json' }]
   }
 }

@@ -1,8 +1,10 @@
 import request from 'supertest'
 import { type ObjectId } from 'mongodb'
 
-import { client } from '../../../src/database/connection'
+import { client, db } from '../../../src/database/connection'
 import app from '../../../src/app'
+
+import fixturesContacts from '../../fixtures/contacts.json'
 
 describe('contactRouter', () => {
   let contactId: ObjectId
@@ -10,7 +12,7 @@ describe('contactRouter', () => {
   beforeAll(async() => {
     try {
       await client.connect()
-      await client.db().dropDatabase({ dbName: process.env.MONGO_DB_NAME })
+      await db.contacts.insertMany(fixturesContacts)
     } catch (err) {
       console.error(err)
     }
@@ -30,13 +32,14 @@ describe('contactRouter', () => {
       await request(app)
         .post('/contacts')
         .send({ firstname: 'luke' })
-        .expect(200)
+        .expect(201)
         .then(res => {
           contactId = res.body._id
 
           expect(res.body).toEqual({
             _id: res.body._id,
             _created: res.body._created,
+            _updated: res.body._updated,
             firstname: 'luke',
             lastname: null,
             email: null,
@@ -74,13 +77,14 @@ describe('contactRouter', () => {
             postcode: 'SW0 4IV'
           }
         })
-        .expect(200)
+        .expect(201)
         .then(res => {
           contactId = res.body._id
 
           expect(res.body).toEqual({
             _id: res.body._id,
             _created: res.body._created,
+            _updated: res.body._updated,
             firstname: 'luke',
             lastname: 'skywalker',
             email: 'luke@sw.com',
@@ -167,17 +171,35 @@ describe('contactRouter', () => {
   })
 
   describe('LIST /contacts', () => {
-    it('should fetch contacts', async () => {
+    it('should fetch contacts - page 1', async () => {
       await request(app)
         .get('/contacts')
         .expect(200)
         .then(res => {
+          expect(res.body.results).toHaveLength(10)
+          expect(res.body.size).toEqual(10)
+          expect(res.body.total).toEqual(12)
+          expect(res.body.page).toEqual(1)
+          expect(res.body.hasMore).toEqual(true)
+          expect(res.body.totalPages).toEqual(2)
+          expect(res.body.nextPage).toEqual(2)
+          expect(res.body.prevPage).toEqual(undefined)
+        })
+    })
+
+    it('should fetch contacts - page 2', async () => {
+      await request(app)
+        .get('/contacts?p=2')
+        .expect(200)
+        .then(res => {
           expect(res.body.results).toHaveLength(2)
           expect(res.body.size).toEqual(2)
-          expect(res.body.total).toEqual(2)
-          expect(res.body.page).toEqual(1)
+          expect(res.body.total).toEqual(12)
+          expect(res.body.page).toEqual(2)
           expect(res.body.hasMore).toEqual(false)
-          expect(res.body.totalPages).toEqual(1)
+          expect(res.body.totalPages).toEqual(2)
+          expect(res.body.nextPage).toEqual(undefined)
+          expect(res.body.prevPage).toEqual(1)
         })
     })
 
@@ -192,7 +214,8 @@ describe('contactRouter', () => {
           expect(res.body.page).toEqual(0)
           expect(res.body.hasMore).toEqual(false)
           expect(res.body.totalPages).toEqual(0)
-
+          expect(res.body.nextPage).toEqual(undefined)
+          expect(res.body.prevPage).toEqual(undefined)
         })
     })
 
@@ -214,7 +237,6 @@ describe('contactRouter', () => {
         .expect(200)
         .then(res => {
           expect(res.body.firstname).toEqual('anakin')
-          expect(res.body._updated).toBeTruthy()
         })
     })
 
@@ -269,12 +291,12 @@ describe('contactRouter', () => {
         })
     })
 
-    it('should fail to delete a non-existent contact', async () => {
+    it('should return no content when deleting a non-existent contact', async () => {
       await request(app)
         .delete(`/contacts/${contactId}`)
-        .expect(404)
+        .expect(204)
         .then(res => {
-          expect(res.error).toBeTruthy()
+          expect(res.body).toEqual({})
         })
     })
   })

@@ -1,11 +1,12 @@
-import z, { boolean, number, object, string, union } from 'zod'
+import z, { boolean, number, object, string, union, record, array } from 'zod'
+
+import { databaseSchema } from '../../database/schema'
 
 export type Product = z.infer<typeof productSchema>
+export type CreateProduct = z.infer<typeof createProductSchema>
+export type UpdateProduct = z.infer<typeof updateProductSchema>
 
-
-const dimensionsItemSchema = z.number().nonnegative().finite()
-
-const metadataKeySchema = z.string().max(32, {
+const metadataKeySchema = string().max(32, {
   message: 'Metadata key must not exceed 32 characters'
 })
 
@@ -17,9 +18,11 @@ const metadataValueSchema = union([
   })
 ])
 
-const metadataSchema = z.record(metadataKeySchema, metadataValueSchema).refine(obj => Object.keys(obj).length <= 20, {
+const metadataSchema = record(metadataKeySchema, metadataValueSchema).refine(obj => Object.keys(obj).length <= 20, {
   message: 'Metadata must not exceed 20 items'
 })
+
+const dimensionsItemSchema = number().nonnegative().finite()
 
 const dimensionsSchema = object({
   width: dimensionsItemSchema,
@@ -28,12 +31,43 @@ const dimensionsSchema = object({
   weight: dimensionsItemSchema
 })
 
-export const productSchema = object({
-  name: string().min(1).max(32),
-  price: number().int().nonnegative().finite().multipleOf(1).max(1000000000),
-  description: string().max(300).nullable().optional(),
-  active: boolean().optional(),
-  shippable: boolean().default(false).optional(),
-  metadata: metadataSchema.nullable().optional(),
-  dimensions: dimensionsSchema.nullable().optional()
+export const createProductSchema = object({
+  name: string()
+    .min(1)
+    .max(32),
+  price: number()
+    .int()
+    .nonnegative()
+    .finite()
+    .multipleOf(1)
+    .max(1000000000),
+  description: string()
+    .max(300)
+    .nullable()
+    .optional(),
+  images: array(string())
+    .max(8)
+    .optional(),
+  features: array(string())
+    .max(20)
+    .optional(),
+  active: boolean()
+    .nullable()
+    .optional(),
+  shippable: boolean()
+    .nullable()
+    .optional(),
+  metadata: metadataSchema
+    .nullable()
+    .optional(),
+  dimensions: dimensionsSchema
+    .nullable()
+    .optional(),
+  unit_label: string()
+    .max(16)
+    .nullable()
+    .optional()
 }).strict()
+
+export const productSchema = databaseSchema.merge(createProductSchema)
+export const updateProductSchema = createProductSchema.partial()
