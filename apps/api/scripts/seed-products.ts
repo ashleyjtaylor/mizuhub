@@ -2,9 +2,10 @@ import fs from 'fs'
 import path from 'path'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 
-import { Product } from '../src/modules/products/schema'
+import { Product, productIdPrefix, productObjectName } from '../src/modules/products/schema'
+import { createId } from '../src/utils/create-id'
 
-const rand = (max: number) => Math.floor(Math.random() * max)
+import { exists, rand } from './seed-utils'
 
 const generateImages = (count: number) => {
   const images: string[] = []
@@ -24,29 +25,31 @@ const generateMetadata = (count: number) => {
   return metadata
 }
 
-const data: Omit<Product, '_id'>[] = []
+const data: Product[] = []
 
 const count = Number(process.argv[2]) || 20
 
 for (let i = 0; i < count; ++i) {
-  const product: Omit<Product, '_id'> = {
+  const product: Product = {
+    _id: createId(productIdPrefix),
     _created: Date.now(),
     _updated: Date.now(),
+    object: productObjectName,
     name: faker.commerce.productName(),
     price: Number(faker.commerce.price()),
-    description: faker.commerce.productDescription(),
-    images: generateImages(rand(8)),
-    features: generateFeatures(rand(20)),
-    active: faker.datatype.boolean(),
-    shippable: faker.datatype.boolean(),
-    unit_label: faker.science.unit().name,
-    metadata: generateMetadata(rand(20)),
-    dimensions: {
+    description: exists() ? faker.commerce.productDescription() : null,
+    images: exists() ? generateImages(rand(8)) : [],
+    features: exists() ? generateFeatures(rand(20)) : [],
+    active: exists() ? faker.datatype.boolean() : null,
+    shippable: exists() ? faker.datatype.boolean() : null,
+    unit_label: exists() ? faker.science.unit().name : null,
+    metadata: exists() ? generateMetadata(rand(20)) : null,
+    dimensions: exists() ? {
       weight: Number((Math.random() * 100).toFixed(2)),
       length: Number((Math.random() * 100).toFixed(2)),
       width: Number((Math.random() * 100).toFixed(2)),
       height: Number((Math.random() * 100).toFixed(2))
-    }
+    } : null
   }
 
   data.push(product)

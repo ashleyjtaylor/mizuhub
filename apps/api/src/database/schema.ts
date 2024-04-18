@@ -1,8 +1,8 @@
-import { ObjectId } from 'mongodb'
-import { number, z } from 'zod'
+import { number, string, z } from 'zod'
 
 export const databaseSchema = z.object({
-  _id: z.instanceof(ObjectId),
+  _id: string(),
   _created: number(),
-  _updated: number()
+  _updated: number(),
+  object: string()
 })

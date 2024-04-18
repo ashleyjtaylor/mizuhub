@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { ObjectId } from 'mongodb'
 import { ZodSchema } from 'zod'
 import { BadRequestError } from '../errors/BadRequest'
 
@@ -19,7 +18,12 @@ export const validateListQueryParams = (req: Request, _res: Response, next: Next
 
 export const validateId = (req: Request, _res: Response, next: NextFunction) => {
   try {
-    new ObjectId(req.params.id)
+    const id = req.params.id
+
+    if (id?.length !== 28 || id?.indexOf('_') !== 3) {
+      throw new BadRequestError('Invalid id')
+    }
+
     next()
   } catch (error) {
     next(error)

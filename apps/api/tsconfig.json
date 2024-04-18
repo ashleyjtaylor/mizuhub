@@ -3,6 +3,13 @@
   "include": ["src"],
   "compilerOptions": {
     "outDir": "dist",
-    "sourceMap": true
+    "baseUrl": ".",
+    "paths": {
+      "@/utils/*": ["src/utils/*"],
+      "@/errors/*": ["src/errors/*"],
+      "@/modules/*": ["src/modules/*"],
+      "@/database/*": ["src/database/*"],
+      "@/middlewares/*": ["src/middlewares/*"]
+    }
   }
 }

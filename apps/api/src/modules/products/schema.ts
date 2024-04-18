@@ -1,10 +1,13 @@
 import z, { boolean, number, object, string, union, record, array } from 'zod'
 
-import { databaseSchema } from '../../database/schema'
+import { databaseSchema } from '@/database/schema'
 
 export type Product = z.infer<typeof productSchema>
 export type CreateProduct = z.infer<typeof createProductSchema>
 export type UpdateProduct = z.infer<typeof updateProductSchema>
+
+export const productIdPrefix = 'pro'
+export const productObjectName = 'product'
 
 const metadataKeySchema = string().max(32, {
   message: 'Metadata key must not exceed 32 characters'

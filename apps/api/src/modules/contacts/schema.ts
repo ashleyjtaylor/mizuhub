@@ -1,13 +1,17 @@
 import z, { object, string } from 'zod'
-import { databaseSchema } from '../../database/schema'
+
+import { databaseSchema } from '@/database/schema'
 
 export type Contact = z.infer<typeof contactSchema>
 export type CreateContact = z.infer<typeof createContactSchema>
 export type UpdateContact = z.infer<typeof updateContactSchema>
 
+export const contactIdPrefix = 'con'
+export const contactObjectName = 'contact'
+
 const addressSchema = object({
   line1: string(),
-  line2: string(),
+  line2: string().nullable().optional(),
   city: string(),
   state: string(),
   country: string(),

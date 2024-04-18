@@ -1,11 +1,10 @@
 import request from 'supertest'
-import { ObjectId } from 'mongodb'
 
 import { client } from '../../../src/database/connection'
 import app from '../../../src/app'
 
 describe('productRouter', () => {
-  let productId: ObjectId
+  let productId: string
 
   beforeAll(async() => {
     try {
@@ -37,6 +36,7 @@ describe('productRouter', () => {
             _id: res.body._id,
             _created: res.body._created,
             _updated: res.body._updated,
+            object: 'product',
             name: 'product',
             price: 3000,
             images: [],
@@ -83,6 +83,7 @@ describe('productRouter', () => {
             _id: res.body._id,
             _created: res.body._created,
             _updated: res.body._updated,
+            object: 'product',
             name: 'product',
             price: 40020,
             active: true,
@@ -188,9 +189,9 @@ describe('productRouter', () => {
         })
     })
 
-    it('should return no content when deleting a non-existent product', async () => {
+    it('should return not found when fetching a non-existent product', async () => {
       await request(app)
-        .get('/products/1111a1111a1a1aa1a11a1a11')
+        .get('/products/pro_000000000000000000000000')
         .expect(404)
         .then(res => {
           expect(res.error).toBeTruthy()
@@ -241,7 +242,7 @@ describe('productRouter', () => {
 
     it('should fail to update a non-existent contact', async () => {
       await request(app)
-        .patch('/products/1111a1111a1a1aa1a11a1a11')
+        .patch('/products/pro_000000000000000000000000')
         .send({ price: 200 })
         .expect(404)
         .then(res => {

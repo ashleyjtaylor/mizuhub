@@ -1,12 +1,11 @@
-import { ObjectId } from 'mongodb'
+import { db } from '@/database/connection'
+import { createId } from '@/utils/create-id'
+import { NotFoundError } from '@/errors/NotFound'
 
-import { db } from '../../database/connection'
-import { CreateProduct, Product, UpdateProduct } from './schema'
-
-import { NotFoundError } from '../../errors/NotFound'
+import { CreateProduct, UpdateProduct, productIdPrefix, productObjectName } from './schema'
 
 const getById = async (id: string) => {
-  return await db.products.findOne<Product>({ _id: new ObjectId(id) })
+  return await db.products.findOne({ _id: id })
 }
 
 const getProduct = async (id: string) => {
@@ -22,11 +21,13 @@ const getProduct = async (id: string) => {
 const createProduct = async (product: CreateProduct) => {
   const result = await db.products.insertOne({
     ...product,
-    _created: new Date().toISOString(),
-    _updated: new Date().toISOString()
+    _id: createId(productIdPrefix),
+    _created: Date.now(),
+    _updated: Date.now(),
+    object: productObjectName
   })
 
-  return await db.products.findOne<Product>({ _id: result.insertedId })
+  return await db.products.findOne({ _id: result.insertedId })
 }
 
 const deleteProduct = async (id: string) => {
@@ -49,10 +50,10 @@ const updateProduct = async (id: string, data: UpdateProduct) => {
   await getProduct(id)
 
   return await db.products.findOneAndUpdate(
-    { _id: new ObjectId(id) },
-    { $set: { ...data, _updated: new Date().toISOString() } },
+    { _id: id },
+    { $set: { ...data, _updated: Date.now() } },
     { returnDocument: 'after' }
-  ) as Product
+  )
 }
 
 export default {

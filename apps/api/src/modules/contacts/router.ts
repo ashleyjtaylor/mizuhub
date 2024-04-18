@@ -1,13 +1,12 @@
 import { Router, Request, Response } from 'express'
 
+import { logger } from '@/utils/logger'
+import { asyncFn } from '@/middlewares/async-handler'
+import { validateId, validateBody, validateListQueryParams } from '@/middlewares/validation'
+
 import contactService from './service'
-import { validateCreateContact, validateUpdateContact } from './validator'
-
-import { validateId, validateBody, validateListQueryParams } from '../../middlewares/validation'
-import { asyncFn } from '../../middlewares/async-handler'
-
-import { logger } from '../../utils/logger'
 import { CreateContact, UpdateContact } from './schema'
+import { validateCreateContact, validateUpdateContact } from './validator'
 
 const router = Router()
 const contactLogger = logger.child({ service: 'contact' })
