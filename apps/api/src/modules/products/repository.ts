@@ -2,10 +2,10 @@ import { db } from '@/database/connection'
 import { createId } from '@/utils/create-id'
 import { NotFoundError } from '@/errors/NotFound'
 
-import { CreateProduct, Product, UpdateProduct, productIdPrefix, productObjectName } from './schema'
+import { CreateProduct, UpdateProduct, productIdPrefix, productObjectName } from './schema'
 
 const getById = async (id: string) => {
-  return await db.products.findOne<Product>({ _id: id })
+  return await db.products.findOne({ _id: id })
 }
 
 const getProduct = async (id: string) => {
@@ -27,7 +27,7 @@ const createProduct = async (product: CreateProduct) => {
     object: productObjectName
   })
 
-  return await db.products.findOne<Product>({ _id: result.insertedId })
+  return await db.products.findOne({ _id: result.insertedId })
 }
 
 const deleteProduct = async (id: string) => {
@@ -53,7 +53,7 @@ const updateProduct = async (id: string, data: UpdateProduct) => {
     { _id: id },
     { $set: { ...data, _updated: Date.now() } },
     { returnDocument: 'after' }
-  ) as Product
+  )
 }
 
 export default {

@@ -2,12 +2,12 @@ import { db } from '@/database/connection'
 import { createId } from '@/utils/create-id'
 import { NotFoundError } from '@/errors/NotFound'
 
-import { Contact, CreateContact, UpdateContact, contactIdPrefix, contactObjectName } from './schema'
+import { CreateContact, UpdateContact, contactIdPrefix, contactObjectName } from './schema'
 
 const CONTACTS_SEARCH_PER_PAGE = 10
 
 const getById = async (id: string) => {
-  return await db.contacts.findOne<Contact>({ _id: id })
+  return await db.contacts.findOne({ _id: id })
 }
 
 const getContact = async (id: string) => {
@@ -29,7 +29,7 @@ const createContact = async (contact: CreateContact) => {
     object: contactObjectName
   })
 
-  return await db.contacts.findOne<Contact>({ _id: result.insertedId })
+  return await db.contacts.findOne({ _id: result.insertedId })
 }
 
 const deleteContact = async (id: string) => {
@@ -55,7 +55,7 @@ const updateContact = async (id: string, data: UpdateContact) => {
     { _id: id },
     { $set: { ...data, _updated: Date.now() } },
     { returnDocument: 'after' }
-  ) as Contact
+  )
 }
 
 const listContacts = async (page: number) => {
