@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 
 import productService from './service'
+import { CreateProduct, UpdateProduct } from './schema'
 import { validateCreateProduct, validateUpdateProduct } from './validator'
 
 import { validateId, validateBody } from '../../middlewares/validation'
@@ -20,16 +21,17 @@ router.get('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
 }))
 
 router.post('/', validateCreateProduct, asyncFn(async (req: Request, res: Response) => {
-  const data = {
-    _created: new Date().toISOString(),
-    _updated: new Date().toISOString(),
+  const data: CreateProduct = {
     name: req.body.name,
     price: req.body.price,
     description: req.body.description ?? null,
+    images: req.body.images ?? [],
+    features: req.body.features ?? [],
     active: req.body.active ?? null,
     shippable: req.body.shippable ?? null,
     metadata: req.body.metadata ?? null,
-    dimensions: req.body.dimensions ?? null
+    dimensions: req.body.dimensions ?? null,
+    unit_label: req.body.unit_label ?? null
   }
 
   const product = await productService.createProduct(data)
@@ -49,10 +51,7 @@ router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) =>
 }))
 
 router.patch('/:id', validateId, validateBody, validateUpdateProduct, asyncFn(async (req: Request, res: Response) => {
-  const data = {
-    ...req.body,
-    _updated: new Date().toISOString()
-  }
+  const data: UpdateProduct = req.body
 
   const result = await productService.updateProduct(req.params.id as string, data)
 

@@ -1,6 +1,8 @@
 import z, { object, string } from 'zod'
+import { databaseSchema } from '../../database/schema'
 
 export type Contact = z.infer<typeof contactSchema>
+export type CreateContact = z.infer<typeof createContactSchema>
 export type UpdateContact = z.infer<typeof updateContactSchema>
 
 const addressSchema = object({
@@ -12,7 +14,7 @@ const addressSchema = object({
   postcode: string()
 })
 
-export const contactSchema = object({
+export const createContactSchema = object({
   firstname: string()
     .min(1)
     .max(32),
@@ -40,4 +42,5 @@ export const contactSchema = object({
     .optional()
 }).strict()
 
-export const updateContactSchema = contactSchema.partial()
+export const contactSchema = databaseSchema.merge(createContactSchema)
+export const updateContactSchema = createContactSchema.partial()

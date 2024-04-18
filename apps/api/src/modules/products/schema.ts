@@ -1,9 +1,10 @@
-import z, { boolean, number, object, string, union, record } from 'zod'
+import z, { boolean, number, object, string, union, record, array } from 'zod'
+
+import { databaseSchema } from '../../database/schema'
 
 export type Product = z.infer<typeof productSchema>
+export type CreateProduct = z.infer<typeof createProductSchema>
 export type UpdateProduct = z.infer<typeof updateProductSchema>
-
-const dimensionsItemSchema = number().nonnegative().finite()
 
 const metadataKeySchema = string().max(32, {
   message: 'Metadata key must not exceed 32 characters'
@@ -21,6 +22,8 @@ const metadataSchema = record(metadataKeySchema, metadataValueSchema).refine(obj
   message: 'Metadata must not exceed 20 items'
 })
 
+const dimensionsItemSchema = number().nonnegative().finite()
+
 const dimensionsSchema = object({
   width: dimensionsItemSchema,
   height: dimensionsItemSchema,
@@ -28,7 +31,7 @@ const dimensionsSchema = object({
   weight: dimensionsItemSchema
 })
 
-export const productSchema = object({
+export const createProductSchema = object({
   name: string()
     .min(1)
     .max(32),
@@ -42,17 +45,29 @@ export const productSchema = object({
     .max(300)
     .nullable()
     .optional(),
+  images: array(string())
+    .max(8)
+    .optional(),
+  features: array(string())
+    .max(20)
+    .optional(),
   active: boolean()
+    .nullable()
     .optional(),
   shippable: boolean()
-    .default(false)
+    .nullable()
     .optional(),
   metadata: metadataSchema
     .nullable()
     .optional(),
   dimensions: dimensionsSchema
     .nullable()
+    .optional(),
+  unit_label: string()
+    .max(16)
+    .nullable()
     .optional()
 }).strict()
 
-export const updateProductSchema = productSchema.partial()
+export const productSchema = databaseSchema.merge(createProductSchema)
+export const updateProductSchema = createProductSchema.partial()

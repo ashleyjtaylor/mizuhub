@@ -1,7 +1,7 @@
 import productRepository from './repository'
-import { Product, UpdateProduct } from './schema'
+import { CreateProduct, UpdateProduct } from './schema'
 
-const createProduct = async (product: Product) => {
+const createProduct = async (product: CreateProduct) => {
   return await productRepository.createProduct(product)
 }
 

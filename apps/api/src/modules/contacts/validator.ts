@@ -1,7 +1,7 @@
 import { validate } from '../../middlewares/validation'
 
-import { contactSchema, updateContactSchema } from './schema'
+import { createContactSchema, updateContactSchema } from './schema'
 
-export const validateCreateContact = validate(contactSchema)
+export const validateCreateContact = validate(createContactSchema)
 
 export const validateUpdateContact = validate(updateContactSchema)

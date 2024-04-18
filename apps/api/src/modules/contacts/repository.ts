@@ -1,14 +1,14 @@
 import { ObjectId } from 'mongodb'
 
 import { db } from '../../database/connection'
-import { Contact, UpdateContact } from './schema'
+import { Contact, CreateContact, UpdateContact } from './schema'
 
 import { NotFoundError } from '../../errors/NotFound'
 
 const CONTACTS_SEARCH_PER_PAGE = 10
 
 const getById = async (id: string) => {
-  return await db.contacts.findOne({ _id: new ObjectId(id) })
+  return await db.contacts.findOne<Contact>({ _id: new ObjectId(id) })
 }
 
 const getContact = async (id: string) => {
@@ -21,10 +21,14 @@ const getContact = async (id: string) => {
   return contact
 }
 
-const createContact = async (contact: Contact) => {
-  const result = await db.contacts.insertOne(contact)
+const createContact = async (contact: CreateContact) => {
+  const result = await db.contacts.insertOne({
+    ...contact,
+    _created: new Date().toISOString(),
+    _updated: new Date().toISOString()
+  })
 
-  return await db.contacts.findOne({ _id: result.insertedId })
+  return await db.contacts.findOne<Contact>({ _id: result.insertedId })
 }
 
 const deleteContact = async (id: string) => {
@@ -48,9 +52,9 @@ const updateContact = async (id: string, data: UpdateContact) => {
 
   return await db.contacts.findOneAndUpdate(
     { _id: new ObjectId(id) },
-    { $set: { ...data } },
+    { $set: { ...data, _updated: new Date().toISOString() } },
     { returnDocument: 'after' }
-  )
+  ) as Contact
 }
 
 const listContacts = async (page: number) => {

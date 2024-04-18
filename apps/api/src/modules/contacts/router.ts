@@ -7,6 +7,7 @@ import { validateId, validateBody, validateListQueryParams } from '../../middlew
 import { asyncFn } from '../../middlewares/async-handler'
 
 import { logger } from '../../utils/logger'
+import { CreateContact, UpdateContact } from './schema'
 
 const router = Router()
 const contactLogger = logger.child({ service: 'contact' })
@@ -30,9 +31,7 @@ router.get('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
 }))
 
 router.post('/', validateCreateContact, asyncFn(async (req: Request, res: Response) => {
-  const data = {
-    _created:  new Date().toISOString(),
-    _updated: new Date().toISOString(),
+  const data: CreateContact = {
     firstname: req.body.firstname,
     lastname: req.body.lastname ?? null,
     email: req.body.email ?? null,
@@ -59,10 +58,7 @@ router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) =>
 }))
 
 router.patch('/:id', validateId, validateBody, validateUpdateContact, asyncFn(async (req: Request, res: Response) => {
-  const data = {
-    ...req.body,
-    _updated: new Date().toISOString()
-  }
+  const data: UpdateContact = req.body
 
   const result = await contactService.updateContact(req.params.id as string, data)
 

@@ -1,7 +1,7 @@
 import contactRepository from './repository'
-import { Contact, UpdateContact } from './schema'
+import { CreateContact, UpdateContact } from './schema'
 
-const createContact = async (contact: Contact) => {
+const createContact = async (contact: CreateContact) => {
   return await contactRepository.createContact(contact)
 }
 
