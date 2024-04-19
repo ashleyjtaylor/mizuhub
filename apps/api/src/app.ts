@@ -7,7 +7,6 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 import { errorHandler } from '@/middlewares/error-handler'
 import { NotFoundError } from '@/errors/NotFound'
 import { createId } from '@/utils/create-id'
-import { httpLogger } from '@/utils/logger'
 
 import contactRouter from '@/modules/contacts/router'
 import productRouter from '@/modules/products/router'
@@ -24,8 +23,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader('request-id', reqId)
   next()
 })
-
-app.use(httpLogger)
 
 app.use('/contacts', contactRouter)
 app.use('/products', productRouter)
