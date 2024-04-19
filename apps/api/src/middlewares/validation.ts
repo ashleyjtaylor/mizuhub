@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { ZodSchema } from 'zod'
-import { BadRequestError } from '../errors/BadRequest'
+
+import { ID_REGEX } from '@/database/schema'
+import { BadRequestError } from '@/errors/BadRequest'
 
 export const validateListQueryParams = (req: Request, _res: Response, next: NextFunction) => {
   try {
@@ -18,26 +20,9 @@ export const validateListQueryParams = (req: Request, _res: Response, next: Next
 
 export const validateId = (req: Request, _res: Response, next: NextFunction) => {
   try {
-    const id = req.params.id
-
-    if (id?.length !== 28 || id?.indexOf('_') !== 3) {
+    if (!req.params.id || !ID_REGEX.test(req.params.id)) {
       throw new BadRequestError('Invalid id')
     }
-
-    next()
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const validateBody = (req: Request, _res: Response, next: NextFunction) => {
-  try {
-    const empty = Object.keys(req.body)
-
-    if (empty.length === 0) {
-      throw new BadRequestError('Invalid data provided')
-    }
-
     next()
   } catch (error) {
     next(error)
@@ -46,6 +31,10 @@ export const validateBody = (req: Request, _res: Response, next: NextFunction) =
 
 export const validate = (schema: ZodSchema) => async (req: Request, _res: Response, next: NextFunction) => {
   try {
+    if (Object.keys(req.body).length === 0) {
+      throw new BadRequestError('Invalid data provided')
+    }
+
     await schema.parse(req.body)
 
     next()

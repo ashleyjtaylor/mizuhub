@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express'
 
 import { logger } from '@/utils/logger'
 import { asyncFn } from '@/middlewares/async-handler'
-import { validateId, validateBody, validateListQueryParams } from '@/middlewares/validation'
+import { validateId, validateListQueryParams } from '@/middlewares/validation'
 
 import contactService from './service'
 import { CreateContact, UpdateContact } from './schema'
@@ -56,7 +56,7 @@ router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) =>
   res.status(statusCode).json(result)
 }))
 
-router.patch('/:id', validateId, validateBody, validateUpdateContact, asyncFn(async (req: Request, res: Response) => {
+router.patch('/:id', validateId, validateUpdateContact, asyncFn(async (req: Request, res: Response) => {
   const data: UpdateContact = req.body
 
   const result = await contactService.updateContact(req.params.id as string, data)
