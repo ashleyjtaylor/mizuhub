@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express'
 
 import { logger } from '@/utils/logger'
 import { asyncFn } from '@/middlewares/async-handler'
-import { validateId, validateBody } from '@/middlewares/validation'
+import { validateId } from '@/middlewares/validation'
 
 import productService from './service'
 import { CreateProduct, UpdateProduct } from './schema'
@@ -49,7 +49,7 @@ router.delete('/:id', validateId, asyncFn(async (req: Request, res: Response) =>
   res.status(statusCode).json(result)
 }))
 
-router.patch('/:id', validateId, validateBody, validateUpdateProduct, asyncFn(async (req: Request, res: Response) => {
+router.patch('/:id', validateId, validateUpdateProduct, asyncFn(async (req: Request, res: Response) => {
   const data: UpdateProduct = req.body
 
   const result = await productService.updateProduct(req.params.id as string, data)
