@@ -12,7 +12,7 @@ const data: Contact[] = []
 const count = Number(process.argv[2]) || 20
 
 for (let i = 0; i < count; ++i) {
-  const contact: Contact= {
+  const contact: Contact = {
     _id: createId(contactIdPrefix),
     _created: Date.now(),
     _updated: Date.now(),

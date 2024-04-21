@@ -23,6 +23,7 @@ router.post('/', validateCreateProduct, asyncFn(async (req: Request, res: Respon
   const data: CreateProduct = {
     name: req.body.name,
     price: req.body.price,
+    currency: req.body.currency,
     description: req.body.description ?? null,
     images: req.body.images ?? [],
     features: req.body.features ?? [],

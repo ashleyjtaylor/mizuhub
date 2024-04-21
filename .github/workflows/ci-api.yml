@@ -45,6 +45,19 @@ jobs:
       - run: |
           npm ci
           npx turbo run lint --filter ${{ env.WORKING_DIRECTORY }}...
+  
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: |
+          npm ci
+          npx turbo run typecheck --filter ${{ env.WORKING_DIRECTORY }}...
 
   test:
     runs-on: ubuntu-latest
