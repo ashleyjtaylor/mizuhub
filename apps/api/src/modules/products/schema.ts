@@ -5,10 +5,13 @@ import { databaseSchema } from '@/database/schema'
 export type Product = z.infer<typeof productSchema>
 export type CreateProduct = z.infer<typeof createProductSchema>
 export type UpdateProduct = z.infer<typeof updateProductSchema>
+export type ProductCurrencyCode = z.infer<typeof currencyCodeSchema>
 
 export const productIdPrefix = 'pro'
 export const productObjectName = 'product'
 export const productCurrencyCodes = ['gbp', 'usd', 'eur'] as const
+
+const currencyCodeSchema = z.enum(productCurrencyCodes)
 
 const metadataKeySchema = string().max(32, {
   message: 'Metadata key must not exceed 32 characters'
@@ -46,7 +49,7 @@ export const createProductSchema = object({
     .multipleOf(1)
     .max(1000000000),
   currency:
-    z.enum(productCurrencyCodes),
+    currencyCodeSchema,
   description: string()
     .max(300)
     .nullable()

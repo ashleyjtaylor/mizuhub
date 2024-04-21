@@ -37,7 +37,7 @@ for (let i = 0; i < count; ++i) {
     object: productObjectName,
     name: faker.commerce.productName(),
     price: Number(faker.commerce.price()),
-    currency: productCurrencyCodes[rand(2)],
+    currency: productCurrencyCodes[rand(3)],
     description: exists() ? faker.commerce.productDescription() : null,
     images: exists() ? generateImages(rand(8)) : [],
     features: exists() ? generateFeatures(rand(20)) : [],
