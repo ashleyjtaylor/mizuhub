@@ -27,7 +27,7 @@ describe('productRouter', () => {
     it('should create a product using required values', async () => {
       await request(app)
         .post('/products')
-        .send({ name: 'product', price: 3000 })
+        .send({ name: 'product', price: 3000, currency: 'gbp' })
         .expect(201)
         .then(res => {
           productId = res.body._id
@@ -39,6 +39,7 @@ describe('productRouter', () => {
             object: 'product',
             name: 'product',
             price: 3000,
+            currency: 'gbp',
             images: [],
             features: [],
             unit_label: null,
@@ -57,6 +58,7 @@ describe('productRouter', () => {
         .send({
           name: 'product',
           price: 40020,
+          currency: 'usd',
           active: true,
           shippable: true,
           description: 'a new product',
@@ -86,6 +88,7 @@ describe('productRouter', () => {
             object: 'product',
             name: 'product',
             price: 40020,
+            currency: 'usd',
             active: true,
             shippable: true,
             description: 'a new product',

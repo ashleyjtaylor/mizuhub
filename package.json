@@ -11,6 +11,7 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "build": "turbo build",
+    "typecheck": "turbo typecheck",
     "clean": "rm -rf node_modules coverage **/*/*.turbo **/*/dist **/*/.next **/*cdk.out **/*/logs",
     "prepare": "husky"
   },

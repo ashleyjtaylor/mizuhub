@@ -8,6 +8,7 @@ export type UpdateProduct = z.infer<typeof updateProductSchema>
 
 export const productIdPrefix = 'pro'
 export const productObjectName = 'product'
+export const productCurrencyCodes = ['gbp', 'usd', 'eur'] as const
 
 const metadataKeySchema = string().max(32, {
   message: 'Metadata key must not exceed 32 characters'
@@ -44,6 +45,8 @@ export const createProductSchema = object({
     .finite()
     .multipleOf(1)
     .max(1000000000),
+  currency:
+    z.enum(productCurrencyCodes),
   description: string()
     .max(300)
     .nullable()

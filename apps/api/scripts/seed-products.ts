@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 
-import { Product, productIdPrefix, productObjectName } from '../src/modules/products/schema'
+import { Product, productIdPrefix, productObjectName, productCurrencyCodes } from '../src/modules/products/schema'
 import { createId } from '../src/utils/create-id'
 
 import { exists, rand } from './seed-utils'
@@ -37,6 +37,7 @@ for (let i = 0; i < count; ++i) {
     object: productObjectName,
     name: faker.commerce.productName(),
     price: Number(faker.commerce.price()),
+    currency: productCurrencyCodes[rand(2)],
     description: exists() ? faker.commerce.productDescription() : null,
     images: exists() ? generateImages(rand(8)) : [],
     features: exists() ? generateFeatures(rand(20)) : [],
