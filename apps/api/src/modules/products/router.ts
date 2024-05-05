@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express'
 
 import { logger } from '@/utils/logger'
 import { asyncFn } from '@/middlewares/async-handler'
-import { validateId } from '@/middlewares/validation'
+import { validateId, validateListQueryParams } from '@/middlewares/validation'
 
 import productService from './service'
 import { CreateProduct, UpdateProduct } from './schema'
@@ -17,6 +17,16 @@ router.get('/:id', validateId, asyncFn(async (req: Request, res: Response) => {
   productLogger.info({ product }, `Product fetched: ${req.params.id}`)
 
   res.json(product)
+}))
+
+router.get('/', validateListQueryParams, asyncFn(async (req: Request, res: Response) => {
+  const page = Number(req.query.p || 1)
+
+  const results = await productService.listProducts(page)
+
+  productLogger.info({ results }, `Product list - page: ${page}`)
+
+  res.json(results)
 }))
 
 router.post('/', validateCreateProduct, asyncFn(async (req: Request, res: Response) => {

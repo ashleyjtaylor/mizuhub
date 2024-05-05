@@ -17,9 +17,14 @@ const updateProduct = async (id: string, data: UpdateProduct) => {
   return await productRepository.updateProduct(id, data)
 }
 
+const listProducts = async (page: number) => {
+  return await productRepository.listProducts(page)
+}
+
 export default {
   getProduct,
   createProduct,
   deleteProduct,
-  updateProduct
+  updateProduct,
+  listProducts
 }
