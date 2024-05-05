@@ -1,8 +1,11 @@
 import { db } from '@/database/connection'
+import { list } from '@/database/utils'
 import { createId } from '@/utils/create-id'
 import { NotFoundError } from '@/errors/NotFound'
 
-import { CreateProduct, UpdateProduct, productIdPrefix, productObjectName } from './schema'
+import { CreateProduct, Product, UpdateProduct, productIdPrefix, productObjectName } from './schema'
+
+const SEARCH_RESULTS_PER_PAGE = 10
 
 const getById = async (id: string) => {
   return await db.products.findOne({ _id: id })
@@ -56,9 +59,12 @@ const updateProduct = async (id: string, data: UpdateProduct) => {
   )
 }
 
+const listProducts = async (page: number) => await list<Product>(db.products, page, SEARCH_RESULTS_PER_PAGE)
+
 export default {
   getProduct,
   createProduct,
   deleteProduct,
-  updateProduct
+  updateProduct,
+  listProducts
 }

@@ -1,10 +1,12 @@
 import { db } from '@/database/connection'
+import { list } from '@/database/utils'
+
 import { createId } from '@/utils/create-id'
 import { NotFoundError } from '@/errors/NotFound'
 
-import { CreateContact, UpdateContact, contactIdPrefix, contactObjectName } from './schema'
+import { Contact, CreateContact, UpdateContact, contactIdPrefix, contactObjectName } from './schema'
 
-const CONTACTS_SEARCH_PER_PAGE = 10
+const SEARCH_RESULTS_PER_PAGE = 10
 
 const getById = async (id: string) => {
   return await db.contacts.findOne({ _id: id })
@@ -58,44 +60,7 @@ const updateContact = async (id: string, data: UpdateContact) => {
   )
 }
 
-const listContacts = async (page: number) => {
-  if (page === 0) {
-    return {
-      page,
-      results: [],
-      size: 0,
-      total: 0,
-      totalPages: 0,
-      hasMore: false
-    }
-  }
-
-  const skip = (page - 1) * CONTACTS_SEARCH_PER_PAGE
-
-  const search = db.contacts
-    .find()
-    .sort({ _created: 1 })
-    .skip(skip)
-    .limit(CONTACTS_SEARCH_PER_PAGE)
-
-  const total = await db.contacts.countDocuments()
-  const results = await search.toArray()
-  const hasMore = total > (skip + results.length)
-  const totalPages = Math.ceil(total / CONTACTS_SEARCH_PER_PAGE)
-  const nextPage = hasMore ? page + 1 : undefined
-  const prevPage = page !== 1 ? page - 1 : undefined
-
-  return {
-    results,
-    size: results.length,
-    page,
-    total,
-    totalPages,
-    hasMore,
-    nextPage,
-    prevPage
-  }
-}
+const listContacts = async (page: number) => await list<Contact>(db.contacts, page, SEARCH_RESULTS_PER_PAGE)
 
 export default {
   getById,
