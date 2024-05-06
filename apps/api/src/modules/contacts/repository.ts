@@ -63,7 +63,6 @@ const updateContact = async (id: string, data: UpdateContact) => {
 const listContacts = async (page: number) => await list<Contact>(db.contacts, page, SEARCH_RESULTS_PER_PAGE)
 
 export default {
-  getById,
   getContact,
   createContact,
   deleteContact,
